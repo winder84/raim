@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    {% block metatags %}{% endblock %}
+        {% stylesheets 'bundles/app/css/*' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {% stylesheets '@bootstrap_css' %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+        {% javascripts '@jquery' '@bootstrap_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <link rel="stylesheet" href="{{ asset('bundles/app/flexSlider/flexslider.css') }}" />
+        <script src="{{ asset('bundles/app/js/bootstrap-typeahead.js') }}"></script>
+        <script src="{{ asset('bundles/app/flexSlider/jquery.flexslider-min.js') }}"></script>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+	    {% block counters %}{% endblock %}
+    </head>
+    <body>
+        <div class="mainBlock">
+            {% block body %}{% endblock %}
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

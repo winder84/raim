@@ -1,0 +1,479 @@
+body {
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	margin: 0;
+	background-color: #ccc;
+}
+
+.mainBlock {
+	background-color: #fff;
+	width: 1248px;
+	margin: 0 auto;
+}
+
+.content {
+	background-color: #efefef;
+}
+
+.headerMenuBlock {
+	width: 100%;
+	height: 75px;
+	background-color: #efefef;
+}
+
+.headerMenu {
+	width: 1100px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.headerMenu div {
+	display: inline-block;
+}
+
+.headerLogoBlock {
+	line-height: 75px;
+}
+
+.headerLogoBlock a {
+	display: inline-block;
+}
+
+.headerLogo {
+	width: 75px;
+	height: 75px;
+	background: url("/bundles/app/images/Rlogo75.png");
+}
+
+.headerLogoText {
+	line-height: 75px;
+	font-size: 28px;
+	vertical-align: top;
+	color: #3a3a3a;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.headerMenuDiv {
+	line-height: 75px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 0 0 50px;
+	padding: 0;
+	font-size: 14px;
+}
+
+.headerMenuDiv a {
+	height: 100%;
+	display: inline-block;
+	line-height: 75px;
+	margin: 0 0 0 10px;
+	padding: 0 10px;
+	cursor: pointer;
+	text-decoration: none;
+	color: #3a3a3a;
+}
+
+.headerMenuDiv a:hover {
+	background-color: #cfdfe8;
+	color: #fff;
+	text-decoration: none;
+}
+
+.middleBlock {
+	width: 100%;
+	height: 232px;
+}
+
+.middleBlock img {
+	position: absolute;
+}
+
+.middleBlockText {
+	color: #ccc;
+	padding: 150px 0 0 130px;
+	font-size: 28px;
+	position: absolute;
+}
+
+.productListBlock {
+	width: 1100px;
+	margin: 0 auto;
+}
+
+.content h1 {
+	font-size: 1.4em;
+	color: #3a3a3a;
+}
+
+.content h3 {
+	font-size: 1.2em;
+	color: #3a3a3a;
+}
+
+.productListBlock h1 {
+	text-align: center;
+	padding: 15px 0 0 0;
+	margin: 0;
+}
+
+.siteBlock h1, .vendorBlock h1 {
+	margin: 0 auto;
+	padding: 15px 0 0 0;
+	width: 300px;
+	text-align: center;
+}
+
+h2.categoryH2 {
+	text-align: center;
+	font-size: 1.2em;
+	color: #3a3a3a;
+	margin: 0;
+}
+
+.productListUl {
+	list-style: none;
+	margin: 0;
+	padding: 10px 0;
+	display: inline-block;
+}
+
+.productListUl li {
+	display: inline-block;
+	vertical-align: top;
+	margin: 10px 2px;
+}
+
+.productListItem {
+	width: 200px;
+	background-color: #fff;
+	text-align: center;
+	font-family: "Droid Sans", sans-serif;
+}
+
+.productListItem .itemName {
+	background-color: #3a3a3a;
+	padding: 1px 7px;
+	font-size: 12px;
+	color: #fff;
+	min-height: 28px;
+	vertical-align: middle;
+}
+
+.productLink {
+	display: block;
+	padding: 10px;
+	font-weight: bold;
+}
+
+.shopUniBlock {
+	width: 400px;
+	padding: 30px 0 0 0;
+	text-align: center;
+}
+
+.shopUniBlock div {
+	background-color: #fff;
+	padding: 7px;
+	color: #3a3a3a;
+}
+
+.shopUniBlock a {
+	color: #3a3a3a;
+}
+
+.shopUniBlock a.productLink {
+	color: #4d120d;
+	background-color: #649bac;
+}
+
+.shopUniBlock a:hover {
+	color: #3a3a3a;
+}
+
+.shopDescBlock .itemDesription{
+	background-color: #fff;
+	color: #3a3a3a;
+	padding: 5px 20px;
+}
+
+.shopDescBlock {
+	background-color: #fff;
+	width: 620px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 30px 0 0 50px;
+}
+
+.shopUniBlock img {
+	width: 380px;
+	background: #fff;
+	padding: 10px;
+}
+
+.shopUniBlock .itemName, .shopDescBlock .itemName {
+	background-color: #3a3a3a;
+	padding: 7px;
+	margin: 0;
+	font-size: 16px;
+	color: #fff;
+	text-align: center;
+}
+
+.shopBlockDiv p {
+	margin: 0;
+}
+
+.productListItem .itemPicture {
+	height: 180px;
+	margin: 5px 0;
+}
+
+.productListItem .itemPicture img {
+	max-width: 220px;
+	height: 180px;
+}
+
+.productListItem .itemModel {
+	font-size: 12px;
+	color: #6f6f6f;
+	padding: 10px 0 0 0;
+}
+
+.productListItem .itemPrice {
+	font-size: 14px;
+	color: orange;
+	padding: 0 0 10px 0;
+}
+
+.productListItem .itemLink {
+	padding: 0 0 10px 0;
+}
+
+.productListItem .itemLink a {
+	font-size: 14px;
+	color: #3a3a3a;
+	text-decoration: none;
+}
+
+.productListItem .itemLink a:hover, .vendorBlockUl a:hover {
+	color: #3a3a3a;
+}
+
+.footerBlock {
+	width: 100%;
+	height: 50px;
+	background-color: #3a3a3a;
+}
+
+.siteBlockUl, .vendorBlockUl {
+	list-style: none;
+	width: 1100px;
+	margin: 0 auto;
+	padding: 10px 0 30px 0;
+	text-align: center;
+}
+
+.siteBlockUl li {
+	display: inline-block;
+	margin: 0 30px;
+	width: 150px;
+}
+
+.vendorBlockUl li {
+	display: inline-block;
+	margin: 10px 10px;
+	font-size: 1em;
+}
+
+.vendorBlockUl a {
+	color: #3a3a3a;
+}
+
+.vendorBlock {
+	background-color: #efefef;
+}
+
+.vendorBlock hr {
+	margin: 0;
+}
+
+.categoryDesc {
+	font-size: 1em;
+	color: #6f6f6f;
+	padding: 10px 95px 10px 70px;
+	text-align: justify;
+}
+
+.categoryDesc p {
+	margin: 0;
+}
+.siteBlockUl li img {
+	width: 150px;
+}
+
+.shopBlock {
+	width: 1100px;
+	margin: 0 auto;
+	padding: 0 0 10px 0;
+}
+
+.shopBlock .shopBlockDiv {
+	display: inline-block;
+	vertical-align: top;
+}
+
+h1.shopTitle {
+	font-size: 1.2em;
+	margin: 0;
+	width: 100%;
+	text-align: center;
+	padding: 20px 0;
+}
+
+h2.shopTitle {
+	color: #3a3a3a;
+	font-size: 1.2em;
+	margin: 0;
+	width: 100%;
+	text-align: center;
+	padding: 10px 0;
+}
+
+h3.shopTitle {
+	text-align: center;
+	margin: 5px 0;
+}
+
+.paginator {
+	text-align: center;
+}
+
+.paginator ul {
+	list-style: none;
+	padding: 10px 0;
+	margin: 0;
+}
+
+.paginator ul li {
+	display: inline-block;
+	background-color: #3a3a3a;
+}
+
+.paginator ul li a {
+	display: block;
+	margin: 0;
+	padding: 4px 10px;
+	color: #fff;
+	text-decoration: none;
+}
+
+.paginator ul li a:hover {
+	background-color: #161616;
+	color: #FFF;
+}
+
+.paginator ul li a.active {
+	background-color: #161616;
+	color: #FFF;
+}
+
+.e404Block {
+	list-style: none;
+	width: 1200px;
+	height: 415px;
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+	color: #3a3a3a;
+	background: url("/bundles/app/images/404.png") no-repeat;
+}
+
+.breadcrumbs {
+	background: #efefef;
+}
+
+.breadcrumbs ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	padding: 10px 0 0 75px;
+}
+
+.breadcrumbs li {
+	display: inline-block;
+	color: #666;
+}
+
+.breadcrumbs li a {
+	text-decoration: none;
+	color: #666;
+}
+
+.breadcrumbs li a:hover {
+	text-decoration: underline;
+}
+
+.flexslider ul li img {
+	width: 368px !important;
+}
+
+#searchInput {
+	background-color: #efefef;
+}
+
+#searchInputDiv {
+	position: absolute;
+	width: 400px;
+	z-index: 1;
+	margin: 10px 0 10px 840px;
+}
+
+
+/*--------  menu -----------------*/
+ul.dropdown li { position: relative; }
+ul.dropdown, ul.dropdown-inside {
+	list-style-type: none;
+	padding: 0;
+}
+ul.dropdown-inside {
+	position: absolute;
+	left: -9999px;
+}
+ul.dropdown-inside a {
+	width: 200px;
+	padding: 0 10px;
+	margin: 0;
+	line-height: 30px;
+	text-align: center;
+	color: #fff;
+}
+ul.dropdown-inside li {
+	padding: 0;
+	margin: 0;
+	line-height: 30px;
+}
+ul.dropdown li.dropdown-top {
+	display: inline;
+	float: left;
+	margin: 0 1px 0 0;
+	z-index: 1000;
+}
+ul.dropdown li.dropdown-top a {
+	/*padding: 3px 10px 4px;*/
+	/*display: block;*/
+}
+/*ul.dropdown a.dropdown-top { background: #efefef; }*/
+/*ul.dropdown a.dropdown-top:hover { padding: 2px 10px 5px; }*/
+ul.dropdown li.dropdown-top:hover .dropdown-inside {
+	display: block;
+	left: -20px;
+}
+ul.dropdown .dropdown-inside {
+	background: #3a3a3a;
+}
+ul.dropdown .dropdown-inside a:hover {
+	background: #ababab;
+	color: #3a3a3a;
+}
+ul.dropdown { margin: 0; }
+/*--------  menu -----------------*/

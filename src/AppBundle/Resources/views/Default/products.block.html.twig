@@ -1,0 +1,26 @@
+{% if paginatorData %}
+	{{ include('AppBundle:Default:paginator.html.twig', { 'paginator': paginatorData.paginator, 'path': paginatorData.path }) }}
+{% endif %}
+<ul class="productListUl">
+	{% for product in products %}
+		<li class="productListItem">
+			<div class="itemName">{{ product.name|raw }}</div>
+			<div class="itemPicture">
+				<noindex>
+					<a rel="nofollow" href="{{ product.url|raw }}" title="{{ product.name|raw }}" alt="{{ product.name|raw }} {{ product.model|raw }}" {% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}onclick="yaCounter32562670.reachGoal('ON_LIST_CLICK'); return true;"{% endif %}>
+						<img src="{% if product.pictures.0 is not defined %}{{ asset('bundles/app/images/nopic.jpg') }}{% else %}{{ product.pictures.0 }}{% endif %}">
+					</a>
+				</noindex>
+			</div>
+			<div class="itemModel">{{ product.model|raw }}</div>
+			<hr />
+			<div class="itemPrice">Цена: {{ product.price|number_format(0, '', ' ') }} руб.</div>
+			<div class="itemLink">
+				<a href="/product/detail/{{ product.alias }}" title="{{ product.name|raw }} {{ product.model|raw }}">Подробнее...</a>
+			</div>
+		</li>
+	{% endfor %}
+</ul>
+{% if paginatorData %}
+	{{ include('AppBundle:Default:paginator.html.twig', { 'paginator': paginatorData.paginator, 'path': paginatorData.path }) }}
+{% endif %}

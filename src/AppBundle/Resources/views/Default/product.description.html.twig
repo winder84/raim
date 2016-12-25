@@ -1,0 +1,70 @@
+{% extends 'AppBundle:Default:layout.html.twig' %}
+
+{% block content %}
+	<div class="shopBlock" itemscope itemtype="http://schema.org/Product">
+		<div class="shopBlockDiv">
+			<div class="shopUniBlock">
+				<h1 itemprop="name" class="itemName">{% if product.vendor|raw is not empty %}{{ product.vendor.name|raw }} | {% endif %}{% if product.model is not empty %}{{ product.model|raw }}{% else %}{{ product.name|raw }}{% endif %}</h1>
+				{% if product.isDelete %}
+					<img src="{{ product.pictures.0 }}" itemprop="image">
+				{% else %}
+					<noindex>
+						<div class="flexslider">
+							<ul class="slides">
+								{% for productPicture in product.pictures %}
+									<li>
+										<a href="{{ product.url|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина" {% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}onclick="yaCounter32562670.reachGoal('ON_DESCRIPTION_CLICK'); return true;"{% endif %}>
+											<img src="{{ productPicture }}" itemprop="image">
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</noindex>
+				{% endif %}
+			</div>
+		</div>
+		<div class="shopBlockDiv">
+			<div class="shopUniBlock" style="margin: 0 0 0 50px; width: 620px;" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+				<h2 class="itemName">Цена: <span itemprop="price">{{ product.price|raw }}</span> руб.</h2>
+				<span style="display: none;" itemprop="priceCurrency">RUB</span>
+				{% if product.isDelete %}
+					<a class="productLink" rel="nofollow" title="{{ product.name|raw }} {{ product.model|raw }}">Нет в наличии</a>
+				{% else %}
+					<noindex>
+						<a class="productLink" rel="nofollow" target="_blank" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
+						 {{ product.model|raw }}"{% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}
+							onclick="yaCounter32562670.reachGoal('ON_DESCRIPTION_BUY_CLICK'); return true;"{% endif %}>Купить в магазине {{ product.site }}</a>
+					</noindex>
+				{% endif %}
+			</div>
+			{% if product.description|raw is not empty %}
+				<div class="shopDescBlock">
+					{% if product.description|length > 10  %}
+						<h2 class="itemName">Описание:</h2>
+						<div itemprop="description" class="itemDesription">{{ product.description|raw }}</div>
+					{% endif %}
+					<h2 class="itemName">Характеристики:</h2>
+					<div itemprop="description" class="itemDesription">
+						{% for productPropertyValue in product.productPropertyValues %}
+							<li style=" margin: 10px 0 0 0; list-style: none;"><b>{{ productPropertyValue.productProperty.name }}</b>: {{ productPropertyValue.value|raw }}</li>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		{% if likeProducts is not empty %}
+			<hr/>
+			<h3 class="shopTitle">Похожие товары:</h3>
+			{{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': paginatorData, 'products': likeProducts }) }}
+		{% endif %}
+	</div>
+	<script>
+		$(document).ready(function () {
+			$('.flexslider').flexslider({
+				animation: "fade",
+				controlNav: "none"
+			});
+		});
+	</script>
+{% endblock %}

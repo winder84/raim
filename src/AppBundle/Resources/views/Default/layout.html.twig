@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+{% block metatags %}
+	{{ include('AppBundle:Default:meta.tags.html.twig', {'metaTags' : metaTags}) }}
+{% endblock %}
+{% block counters %}
+	{% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}
+		{{ include('AppBundle:Default:counters.block.html.twig') }}
+	{% endif %}
+{% endblock %}
+{% block body %}
+	<div class="header">
+		<div class="headerMenuBlock">
+			<div class="headerMenu">
+				<div class="headerLogoBlock">
+					<a href="/" class="headerLogo"></a>
+					<a href="/" class="headerLogoText">raiment-shop.ru</a>
+				</div>
+				<div class="headerMenuDiv">
+					<ul class="dropdown">
+						<li class="dropdown-top">
+							<a href="/">Главная</a>
+						</li>
+						<li class="dropdown-top">
+							<a class="dropdown-top">Категории</a>
+							<ul class="dropdown-inside">
+								{% if menuItems is not empty %}
+									{% for category in menuItems.categories %}
+										{% if loop.index < 20 %}
+											<li><a href="/filter/category+{{ category.alias }}">{{ category.name }}</a></li>
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							</ul>
+						</li>
+						<li class="dropdown-top">
+							<a class="dropdown-top">Популярные бренды</a>
+							<ul class="dropdown-inside">
+								{% if menuItems is not empty %}
+									{% for vendor in menuItems.vendors %}
+										<li><a href="/vendor/{{ vendor.alias }}">{{ vendor.name }}</a></li>
+									{% endfor %}
+								{% endif %}
+							</ul>
+						</li>
+						<li class="dropdown-top">
+							<a class="dropdown-top">Магазины</a>
+							<ul class="dropdown-inside">
+								{% if menuItems is not empty %}
+									{% for site in menuItems.sites %}
+										<li><a href="/shop/description/{{ site.alias }}">{{ site.title }}</a></li>
+									{% endfor %}
+								{% endif %}
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="middleBlock">
+			<div class="form-group" id="searchInputDiv">
+				<input type="text" class="form-control" id="searchInput" placeholder="Поиск" data-provide="typeahead">
+			</div>
+			<img src="{{ menuItems.slideUrl }}">
+			<div class="middleBlockText">{{ menuItems.slideText|raw }}</div>
+		</div>
+	</div>
+	<div class="vendorBlock">
+		{% if category is defined %}
+			{% if category.description %}
+				<div class="categoryDesc">
+					{{ category.description|raw }}
+				</div>
+				<hr />
+			{% endif %}
+		{% endif %}
+	</div>
+	<div class="breadcrumbs">
+		{% if breadcrumbsCategories is defined %}
+			<ul>
+				{% for breadcrumbsCategory in breadcrumbsCategories %}
+					<li>
+						{% if breadcrumbsCategory.alias %}
+							<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a> \
+						{% else %}
+							<a href="/exCategory/{{ breadcrumbsCategory.id }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}
+						{% endif %}
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+	<div class="content">
+		{% block content %}
+
+		{% endblock %}
+	</div>
+	<div class="footerBlock">
+	</div>
+
+	<script>
+		$('#searchInput').typeahead({
+			source: function (query, process) {
+				return $.post('/search', { searchString: query }, function (data) {
+					return process(data.options);
+				});
+			},
+			updater: function(item) {
+				console.log(item);
+//				var parts = item.split('_');
+//				var userId = parts.shift();
+//				$.post('getuserdata', {'user_id':userId},
+//						function (user) {
+//							$('input[name=email]').val(user.email);
+//							$('input[name=phone]').val(user.phone);
+//						},
+//						'json'
+//				);
+//				return parts.join('_');
+			}
+		});
+//		$('#searchInput').on('keyup', function () {
+//			if($(this).val().length > 2) {
+//				$.ajax({
+//					method: "POST",
+//					url: "/search",
+//					data: { searchString: $(this).val() },
+//					success: function (data) {
+//						console.log(data)
+//					}
+//				})
+//			}
+//		});
+	</script>
+{% endblock %}

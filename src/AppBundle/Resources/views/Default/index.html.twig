@@ -1,0 +1,18 @@
+{% extends 'AppBundle:Default:layout.html.twig' %}
+
+{% block content %}
+	<div class="productListBlock">
+		{{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': paginatorData, 'products': products }) }}
+	</div>
+	<div class="vendorBlock">
+		<h2 class="shopTitle">Популярные бренды:</h2>
+		<ul class="vendorBlockUl">
+			{% for vendor in vendors %}
+					<li>
+						<a href="/vendor/{{ vendor.alias }}">{{ vendor.name }}</a>
+					</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<h1 style="margin: 0 auto; width: 660px;">Покупайте одежду с доставкой на raiment-shop.ru.</h1>
+{% endblock %}

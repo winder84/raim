@@ -1,0 +1,46 @@
+services:
+    app.admin.site:
+        class: AppBundle\Admin\SiteAdmin
+        arguments: [~, AppBundle\Entity\Site, AppBundle:SiteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: Магазины}
+
+    app.admin.category:
+        class: AppBundle\Admin\CategoryAdmin
+        arguments: [~, AppBundle\Entity\Category, AppBundle:CategoryAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: Категории}
+
+    app.admin.external_category:
+        class: AppBundle\Admin\ExternalCategoryAdmin
+        arguments: [~, AppBundle\Entity\ExternalCategory, AppBundle:ExternalCategoryAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: Категории магазинов}
+
+    app.admin.vendor:
+        class: AppBundle\Admin\VendorAdmin
+        arguments: [~, AppBundle\Entity\Vendor, AppBundle:VendorAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: Бренды}
+
+    app.admin.product:
+        class: AppBundle\Admin\ProductAdmin
+        arguments: [~, AppBundle\Entity\Product, AppBundle:ProductAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: Продукты}
+
+    app.admin.filter_alias:
+        class: AppBundle\Admin\FilterAliasAdmin
+        arguments: [~, AppBundle\Entity\FilterAlias, AppBundle:FilterAliasAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Контент, label: FilterAlias}
+
+    sitemap.listener:
+        class: %sitemap.listener.class%
+        arguments: [@router, @doctrine.orm.entity_manager]
+        tags: [{name: "presta.sitemap.listener"}]
+
+parameters:
+    # ... other parameters
+    security.acl.permission.map.class: Sonata\AdminBundle\Security\Acl\Permission\AdminPermissionMap
+    sitemap.listener.class: AppBundle\EventListener\SitemapListener
