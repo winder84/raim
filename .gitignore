@@ -9,3 +9,32 @@
 /composer.phar
 /vendor/
 /web/bundles/
+Будет удалено .idea/commandlinetools/
+Будет удалено .idea/copyright/
+Будет удалено .idea/misc.xml
+Будет удалено .idea/modules.xml
+Будет удалено .idea/raiment-shop.ru.iml
+Будет удалено .idea/workspace.xml
+Будет удалено app/cache/
+Будет удалено app/logs/
+Будет удалено src/AppBundle/Entity/Category.php~
+Будет удалено src/AppBundle/Entity/ExternalCategory.php~
+Будет удалено src/AppBundle/Entity/FilterAlias.php~
+Будет удалено src/AppBundle/Entity/Product.php~
+Будет удалено src/AppBundle/Entity/ProductProperty.php~
+Будет удалено src/AppBundle/Entity/ProductPropertyValue.php~
+Будет удалено src/AppBundle/Entity/PropValues.php~
+Будет удалено src/AppBundle/Entity/Properties.php~
+Будет удалено src/AppBundle/Entity/Site.php~
+Будет удалено src/AppBundle/Entity/Stat.php~
+Будет удалено src/AppBundle/Entity/User.php~
+Будет удалено src/AppBundle/Entity/Vendor.php~
+Будет удалено src/Application/Sonata/MediaBundle/Entity/Gallery.php~
+Будет удалено src/Application/Sonata/MediaBundle/Entity/GalleryHasMedia.php~
+Будет удалено src/Application/Sonata/MediaBundle/Entity/Media.php~
+Будет удалено src/Application/Sonata/UserBundle/Entity/Group.php~
+Будет удалено src/Application/Sonata/UserBundle/Entity/User.php~
+Будет удалено web/assetic/
+Будет удалено web/css/
+Будет удалено web/fonts/
+Будет удалено web/js/
