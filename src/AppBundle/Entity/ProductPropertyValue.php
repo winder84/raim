@@ -54,6 +54,13 @@ class ProductPropertyValue
      */
     private $alias;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="propValue", type="string", length=255, nullable=true)
+     */
+    private $propValue;
+
 
 
     /**
@@ -196,5 +203,28 @@ class ProductPropertyValue
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * Set propValue
+     *
+     * @param string $propValue
+     * @return ProductPropertyValue
+     */
+    public function setPropValue($propValue)
+    {
+        $this->propValue = $propValue;
+
+        return $this;
+    }
+
+    /**
+     * Get propValue
+     *
+     * @return string 
+     */
+    public function getPropValue()
+    {
+        return $this->propValue;
     }
 }

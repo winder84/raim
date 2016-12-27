@@ -49,10 +49,8 @@ class FilterAliasAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('id')
-            ->add('alias')
             ->add('aliasText')
-            ->add('description')
+            ->add('description', 'ckeditor')
         ;
     }
 

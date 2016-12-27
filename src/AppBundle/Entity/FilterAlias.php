@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FilterAlias
  *
- * @ORM\Table()
+ * @ORM\Table(indexes={@ORM\Index(name="id", columns={"alias", "aliasText"})})
  * @ORM\Entity
  */
 class FilterAlias
@@ -38,7 +38,7 @@ class FilterAlias
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 

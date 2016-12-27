@@ -290,4 +290,4 @@ sphinxsearch:
      indexes:
          # Список индексов Sphinx (ключ) и имен Entity (значение)
          # которые будут использоваться при поиске
-         Product: "AppBundle:Product"
+         FilterAlias: "AppBundle:FilterAlias"

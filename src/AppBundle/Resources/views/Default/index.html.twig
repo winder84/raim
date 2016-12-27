@@ -2,6 +2,7 @@
 
 {% block content %}
 	<div class="productListBlock">
+		<h1>Товары, которые чаще всего покупают у нас:</h1>
 		{{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': paginatorData, 'products': products }) }}
 	</div>
 	<div class="vendorBlock">
@@ -14,5 +15,4 @@
 			{% endfor %}
 		</ul>
 	</div>
-	<h1 style="margin: 0 auto; width: 660px;">Покупайте одежду с доставкой на raiment-shop.ru.</h1>
 {% endblock %}

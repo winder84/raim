@@ -37,7 +37,7 @@
 							<ul class="dropdown-inside">
 								{% if menuItems is not empty %}
 									{% for vendor in menuItems.vendors %}
-										<li><a href="/vendor/{{ vendor.alias }}">{{ vendor.name }}</a></li>
+										<li><a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a></li>
 									{% endfor %}
 								{% endif %}
 							</ul>
@@ -79,7 +79,7 @@
 			<ul>
 				{% for breadcrumbsCategory in breadcrumbsCategories %}
 					<li>
-						{% if breadcrumbsCategory.alias %}
+						{% if breadcrumbsCategory.alias is defined %}
 							<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a> \
 						{% else %}
 							<a href="/exCategory/{{ breadcrumbsCategory.id }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}

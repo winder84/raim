@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Category
  *
- * @ORM\Table()
+ * @ORM\Table(indexes={@ORM\Index(name="id", columns={"alias"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CategoryRepository")
  */
 class Category

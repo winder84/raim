@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\FilterAlias;
 use AppBundle\Entity\Stat;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    private $exCategoriesIds = array();
     private $menuItems = array();
     private $metaTags = array();
     private $productsPerPage = 20;
@@ -32,17 +32,28 @@ class DefaultController extends Controller
         $notNeedArray = array(0);
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
+        $qb->select('Stat.productId, COUNT(Stat.productId) AS cnt')
+            ->from('AppBundle:Stat', 'Stat')
+            ->groupBy('Stat.productId')
+            ->orderBy('cnt', 'DESC');
+        $query = $qb->getQuery();
+        $productsStats = $query->getResult();
+        $productsIds = array();
+        foreach ($productsStats as $productsStat) {
+            $productsIds[] = $productsStat['productId'];
+        }
         $products = $em
             ->getRepository('AppBundle:Product')
             ->findBy(
                 array(
-                    'ourChoice' => true,
+                    'id' => $productsIds,
                     'isDelete' => false
                 ),
                 array(),
                 $this->chooseProductsCount
             );
         if (count($products) < $this->chooseProductsCount) {
+            $qb = $em->createQueryBuilder();
             foreach ($products as $product) {
                 $notNeedArray[] = $product->getId();
             }
@@ -174,56 +185,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/vendor/{alias}/{page}", name="vendor_route")
-     */
-    public function vendorAction($alias, $page = 1)
-    {
-        $this->metaTags['metaRobots'] = 'nofollow';
-        $em = $this->getDoctrine()->getManager();
-        $vendors = $em
-            ->getRepository('AppBundle:Vendor')
-            ->findBy(array(
-                'alias' => $alias,
-                'isActive' => 1
-            ));
-        if (empty($vendors)) {
-            throw $this->createNotFoundException();
-        }
-        foreach ($vendors as $vendor) {
-            $vendorIds[] = $vendor->getId();
-            $this->metaTags['metaTitle'] = 'Купить ' . $vendor->getName() . ' со скидкой в интернет-магазине. Доставка по РФ';
-        }
-        $qb = $em->createQueryBuilder();
-        $qb->select('Product')
-            ->from('AppBundle:Product', 'Product')
-            ->where('Product.vendor IN (:vendorIds)')
-            ->andWhere('Product.isDelete = 0')
-            ->setParameter('vendorIds', $vendorIds);
-        $query = $qb->getQuery()
-            ->setFirstResult($this->productsPerPage * ($page - 1))
-            ->setMaxResults($this->productsPerPage);
-        $products = new Paginator($query, $fetchJoinCollection = true);
-
-        $productsCount = count($products);
-        $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
-        $path = "/vendor/$alias/";
-        if ($productsCount <= $this->productsPerPage) {
-            $paginatorData = null;
-        } else {
-            $paginatorData = $this->getPaginatorData($paginatorPagesCount, $page, 1, 5, $path);
-        }
-        $this->getMenuItems();
-        return $this->render('AppBundle:Default:vendor.html.twig', array(
-                'products' => $products,
-                'paginatorData' => $paginatorData,
-                'vendor' => $vendors[0],
-                'metaTags' => $this->metaTags,
-                'menuItems' => $this->menuItems
-            )
-        );
-    }
-
-    /**
      * @Route("/exCategory/{id}/{page}", name="ex_category_route")
      */
     public function exCategoryAction($id, $page = 1)
@@ -302,25 +263,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/product/{id}", name="product_route")
-     */
-    public function productAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $product = $em
-            ->getRepository('AppBundle:Product')
-            ->findOneBy(array('id' => $id));
-        if (!$product) {
-            throw $this->createNotFoundException('The product does not exist');
-        }
-        $productAlias = $product->getAlias();
-        if (!$productAlias) {
-            throw $this->createNotFoundException('The product does not exist');
-        }
-        return $this->redirectToRoute('product_detail_route', array('alias' => $productAlias));
-    }
-
-    /**
      * @Route("/product/detail/{alias}", name="product_detail_route")
      */
     public function productDetailAction($alias)
@@ -337,6 +279,7 @@ class DefaultController extends Controller
         if ($product->getIsDelete()) {
             $this->metaTags['metaRobots'] = 'noindex, nofollow';
         }
+        $this->checkAndInsertFilterAliasByProduct($product);
         $productCategory = $product->getCategory();
         $productCategoryName = '';
         if ($productCategory) {
@@ -389,84 +332,19 @@ class DefaultController extends Controller
     public function filterAction($alias, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
-        $parseAliasLevelOne = explode('__', $alias);
-        $parseAliasLevelTwo = array();
-        if (!$parseAliasLevelOne) {
-            throw $this->createNotFoundException('Alias does not found');
-        }
-        foreach ($parseAliasLevelOne as $parseAliasItem) {
-            list($key, $value) = explode('+', $parseAliasItem);
-            $parseAliasLevelTwo[] = array(
-                'name' => $key,
-                'alias' => $value,
-            );
-        }
-        if (!$parseAliasLevelTwo) {
-            throw $this->createNotFoundException('Alias does not parsed');
-        }
-        $qb = $em->createQueryBuilder();
-        $qb->select('Product')
-            ->from('AppBundle:Product', 'Product')
-            ->where('Product.isDelete = 0');
-        $valueIds = array();
-        foreach ($parseAliasLevelTwo as $parseAliasItem) {
-            switch ($parseAliasItem['name']) {
-                case 'category':
-                    $category = $em
-                        ->getRepository('AppBundle:Category')
-                        ->findOneBy(array(
-                            'alias' => $parseAliasItem['alias']
-                        ));
-                    if ($category) {
-                        $qb->andWhere('Product.category IN (:childCategoriesIds)')
-                            ->setParameter('childCategoriesIds', $this->getChildCategoriesIds($category->getId()));
-                    } else {
-                        throw $this->createNotFoundException('Alias does not parsed (category)');
-                    }
-                    break;
-                case 'vendor':
-                    $vendor = $em
-                        ->getRepository('AppBundle:Vendor')
-                        ->findOneBy(array(
-                            'alias' => $parseAliasItem['alias']
-                        ));
-                    if ($vendor) {
-                        $qb->andWhere('Product.vendor = :vendorId')
-                            ->setParameter('vendorId', $vendor->getId());
-                    } else {
-                        throw $this->createNotFoundException('Alias does not parsed (vendor)');
-                    }
-                    break;
-                case 'param':
-                    $value = $em
-                        ->getRepository('AppBundle:ProductPropertyValue')
-                        ->findOneBy(array(
-                            'alias' => $parseAliasItem['alias']
-                        ));
-                    if ($value) {
-                        $valueIds[] = $value->getId();
-                    } else {
-                        throw $this->createNotFoundException('The value does not exist (param)');
-                    }
-                    break;
-                case 'attr':
-                    break;
-            }
-        }
-        if ($valueIds) {
-            foreach ($valueIds as $valueId) {
-                $qb->innerJoin('Product.productPropertyValues','ppv_' . $valueId)
-                ->andWhere('ppv_' . $valueId . ' = ' . $valueId);
-            }
-        }
+        $filterAlias = $em
+            ->getRepository('AppBundle:FilterAlias')
+            ->findOneBy(array(
+                'alias' => $alias
+            ));
+        $qb = $this->getQbByAlias($alias);
         $query = $qb->getQuery()
             ->setFirstResult($this->productsPerPage * ($page - 1))
             ->setMaxResults($this->productsPerPage);
         $products = new Paginator($query, $fetchJoinCollection = true);
-
         $productsCount = count($products);
         $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
-        $path = "/{$alias}/";
+        $path = "/filter/{$alias}/";
         if ($productsCount <= $this->productsPerPage) {
             $paginatorData = null;
         } else {
@@ -477,9 +355,10 @@ class DefaultController extends Controller
             'metaTags' => $this->metaTags,
             'paginatorData' => $paginatorData,
             'products' => $products,
+            'filterAlias' => $filterAlias,
         );
         $returnArray['menuItems'] = $this->menuItems;
-        return $this->render('AppBundle:Default:exCategory.html.twig', $returnArray);
+        return $this->render('AppBundle:Default:filter.html.twig', $returnArray);
     }
 
     /**
@@ -496,12 +375,42 @@ class DefaultController extends Controller
         }
         $newStat = new Stat();
         $newStat->setProductId($product->getId());
+        $this->checkAndInsertFilterAliasByProduct($product);
         if ($request->getClientIp()) {
             $newStat->setClientIp($request->getClientIp());
         }
         $em->persist($newStat);
         $em->flush();
         return $this->redirect($product->getURl());
+    }
+
+    /**
+     * @Route("/search", name="search")
+     */
+    public function searchAction(Request $request) {
+        $searchd = $this->get('iakumai.sphinxsearch.search');
+        $data = $searchd->search($request->query->get('searchString', ''), array('FilterAlias'));
+        $options = array();
+        $em = $this->getDoctrine()->getManager();
+        if (isset($data['matches'])) {
+            $i = 0;
+            foreach ($data['matches'] as $match) {
+                if ($i >=20) {
+                    exit(1);
+                }
+                $filterAlias = $em
+                    ->getRepository('AppBundle:FilterAlias')
+                    ->findOneBy(array('alias' => $match['attrs']['alias']));
+//                $options[$match['attrs']['alias']] = $filterAlias->getAliasText();
+                $options[] = $filterAlias->getAliasText();
+                $i++;
+            }
+        }
+        $response = new JsonResponse();
+        $response->setData(array(
+            'options' => $options
+        ));
+        return $response;
     }
 
     private function getChildCategoriesIds($parentCategoryId)
@@ -533,6 +442,19 @@ class DefaultController extends Controller
             $resultCategoriesIds[] = $exCategoriesId['id'];
         }
         return $resultCategoriesIds;
+    }
+
+    private function getInternalCategory($productCategory)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $parentCategory = $productCategory->getInternalParentCategory();
+        if (!$parentCategory) {
+            $parentCategory = $em
+                ->getRepository('AppBundle:ExternalCategory')
+                ->findOneBy(array('externalId' => $productCategory->getParentId()));
+            $this->getInternalCategory($parentCategory);
+        }
+        return $parentCategory;
     }
 
     private function getMenuItems()
@@ -637,31 +559,130 @@ class DefaultController extends Controller
         }
     }
 
-    /**
-     * @Route("/search", name="search")
-     */
-    public function searchAction(Request $request) {
-        $searchd = $this->get('iakumai.sphinxsearch.search');
-        $data = $searchd->search($request->query->get('searchString', ''), array('Product'));
-        $options = array();
+    public function getQbByAlias($alias)
+    {
         $em = $this->getDoctrine()->getManager();
-        if (isset($data['matches'])) {
-            $i = 0;
-            foreach ($data['matches'] as $match) {
-                if ($i >=20) {
-                    exit(1);
-                }
-                $product = $em
-                    ->getRepository('AppBundle:Product')
-                    ->findOneBy(array('externalId' => $match['attrs']['externalid']));
-                $options[$match['attrs']['externalid']] = str_replace(' ', '_', $match['attrs']['propertyvalue']) . '_' . $product->getName();
-                $i++;
+        $parseAliasLevelOne = explode('__', $alias);
+        $parseAliasLevelTwo = array();
+        if (!$parseAliasLevelOne) {
+            throw $this->createNotFoundException('Alias does not found');
+        }
+        foreach ($parseAliasLevelOne as $parseAliasItem) {
+            list($key, $value) = explode('+', $parseAliasItem);
+            $parseAliasLevelTwo[] = array(
+                'name' => $key,
+                'alias' => $value,
+            );
+        }
+        if (!$parseAliasLevelTwo) {
+            throw $this->createNotFoundException('Alias does not parsed');
+        }
+        $qb = $em->createQueryBuilder();
+        $qb->select('Product')
+            ->from('AppBundle:Product', 'Product')
+            ->where('Product.isDelete = 0');
+        $valueIds = array();
+        foreach ($parseAliasLevelTwo as $parseAliasItem) {
+            switch ($parseAliasItem['name']) {
+                case 'category':
+                    $category = $em
+                        ->getRepository('AppBundle:Category')
+                        ->findOneBy(array(
+                            'alias' => $parseAliasItem['alias']
+                        ));
+                    if ($category) {
+                        $qb->andWhere('Product.category IN (:childCategoriesIds)')
+                            ->setParameter('childCategoriesIds', $this->getChildCategoriesIds($category->getId()));
+                    } else {
+                        throw $this->createNotFoundException('Alias does not parsed (category)');
+                    }
+                    break;
+                case 'vendor':
+                    $vendor = $em
+                        ->getRepository('AppBundle:Vendor')
+                        ->findOneBy(array(
+                            'alias' => $parseAliasItem['alias']
+                        ));
+                    if ($vendor) {
+                        $qb->andWhere('Product.vendor = :vendorId')
+                            ->setParameter('vendorId', $vendor->getId());
+                    } else {
+                        throw $this->createNotFoundException('Alias does not parsed (vendor)');
+                    }
+                    break;
+                case 'param':
+                    $value = $em
+                        ->getRepository('AppBundle:ProductPropertyValue')
+                        ->findOneBy(array(
+                            'alias' => $parseAliasItem['alias']
+                        ));
+                    if ($value) {
+                        $valueIds[] = $value->getId();
+                    } else {
+                        throw $this->createNotFoundException('The value does not exist (param)');
+                    }
+                    break;
+                case 'attr':
+                    break;
             }
         }
-        $response = new JsonResponse();
-        $response->setData(array(
-            'options' => $options
-        ));
-        return $response;
+        if ($valueIds) {
+            foreach ($valueIds as $valueId) {
+                $qb->innerJoin('Product.productPropertyValues','ppv_' . $valueId)
+                    ->andWhere('ppv_' . $valueId . ' = ' . $valueId);
+            }
+        }
+        return $qb;
+    }
+
+    private function checkAndInsertFilterAliasByProduct($product)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $filterAliasArray = array();
+        $productCategory = $product->getCategory();
+        if ($productCategory) {
+            $mainCategory = $this->getInternalCategory($productCategory)->getInternalParentCategory();
+            if ($mainCategory) {
+                $filterAliasArray['alias'][] = 'category+' . $mainCategory->getAlias();
+                $filterAliasArray['name'][] = $mainCategory->getName();
+            }
+        }
+
+        $productVendor = $product->getVendor();
+        if ($productVendor) {
+            $filterAliasArray['alias'][] = 'vendor+' . $productVendor->getAlias();
+            $filterAliasArray['name'][] = $productVendor->getName();
+        }
+        $arrayToWrite = array();
+        if ($filterAliasArray) {
+            $arrayToWrite[] = array(
+                'alias' => implode('__', $filterAliasArray['alias']),
+                'name' => implode(' ', $filterAliasArray['name'])
+            );
+        }
+        $productPropertyValues = $product->getProductPropertyValues();
+        foreach ($productPropertyValues as $productPropertyValue) {
+            $productPropertyValueAlias = $productPropertyValue->getAlias();
+            if ($productPropertyValueAlias) {
+                $arrayToWrite[] = array(
+                    'alias' => implode('__', $filterAliasArray['alias']) . '__' . 'param+' . $productPropertyValueAlias,
+                    'name' => implode(' ', $filterAliasArray['name']) . ' ' . $productPropertyValue->getPropValue()
+                );
+            }
+        }
+        if ($filterAliasArray) {
+            foreach ($arrayToWrite as $itemToWrite) {
+                $filterAlias = $em
+                    ->getRepository('AppBundle:FilterAlias')
+                    ->findOneBy(array('alias' => $itemToWrite['alias']));
+                if (!$filterAlias) {
+                    $newFilterAlias = new FilterAlias();
+                    $newFilterAlias->setAlias($itemToWrite['alias']);
+                    $newFilterAlias->setAliasText(mb_strtolower($itemToWrite['name'], 'UTF-8'));
+                    $em->persist($newFilterAlias);
+                    $em->flush();
+                }
+            }
+        }
     }
 }

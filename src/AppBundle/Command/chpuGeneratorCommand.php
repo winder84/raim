@@ -49,6 +49,7 @@ class chpuGeneratorCommand extends ContainerAwareCommand
             if (empty($categoryAlias)) {
                 $name = $category->getName();
                 $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
                 $category->setAlias($alias);
                 $this->em->persist($category);
             }
@@ -66,6 +67,7 @@ class chpuGeneratorCommand extends ContainerAwareCommand
             if (empty($vendorAlias)) {
                 $name = $vendor->getName();
                 $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
                 $vendor->setAlias($alias);
                 $this->em->persist($vendor);
             }
@@ -83,18 +85,21 @@ class chpuGeneratorCommand extends ContainerAwareCommand
             ));
         foreach ($productProperties as $productProperty) {
             $productPropertyAlias = $productProperty->getAlias();
+            $name = $productProperty->getName();
             if (empty($productPropertyAlias)) {
-                $name = $productProperty->getName();
                 $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
                 $productProperty->setAlias($alias);
                 $this->em->persist($productProperty);
             }
             foreach ($productProperty->getValues() as $productPropertyValue) {
                 $alias = $productPropertyValue->getAlias();
                 if (empty($alias)) {
-                    $name = $productPropertyValue->getValue();
-                    $alias = mb_substr(mb_strtolower($productProperty->getAlias() . '_' . $this->TransUrl(strip_tags($name)), 'UTF-8'), 0, 50,'UTF-8');
+                    $value = $productPropertyValue->getValue();
+                    $alias = mb_substr(mb_strtolower($productProperty->getAlias() . '_' . $this->TransUrl(strip_tags($value)), 'UTF-8'), 0, 50,'UTF-8');
+                    $alias = preg_replace("/__+/","_",$alias);
                     $productPropertyValue->setAlias($alias);
+                    $productPropertyValue->setPropValue($name . ' ' . $productPropertyValue->getValue());
                     $this->em->persist($productPropertyValue);
                 }
                 $this->em->flush();
@@ -113,6 +118,7 @@ class chpuGeneratorCommand extends ContainerAwareCommand
             if (empty($productAlias)) {
                 $name = $product->getExternalId() . '_' . $product->getName();
                 $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
                 $product->setAlias($alias);
                 $this->em->persist($product);
             }

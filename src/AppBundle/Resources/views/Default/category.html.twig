@@ -1,8 +1,0 @@
-{% extends 'AppBundle:Default:layout.html.twig' %}
-
-{% block content %}
-	<div class="shopBlock">
-		<h1 class="shopTitle">Купить {{ category.name|raw|lower }} с доставкой:</h1>
-		{{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': paginatorData, 'products': products }) }}
-	</div>
-{% endblock %}
