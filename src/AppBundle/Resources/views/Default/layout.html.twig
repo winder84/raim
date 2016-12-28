@@ -98,37 +98,18 @@
 	</div>
 
 	<script>
+		var searchArray = [];
 		$('#searchInput').typeahead({
+			minLength: 3,
 			source: function (query, process) {
 				return $.post('/search', { searchString: query }, function (data) {
+					searchArray = data.searchArray;
 					return process(data.options);
 				});
 			},
 			updater: function(item) {
-				console.log(item);
-//				var parts = item.split('_');
-//				var userId = parts.shift();
-//				$.post('getuserdata', {'user_id':userId},
-//						function (user) {
-//							$('input[name=email]').val(user.email);
-//							$('input[name=phone]').val(user.phone);
-//						},
-//						'json'
-//				);
-//				return parts.join('_');
+				document.location.href = '/filter/' + searchArray[item];
 			}
 		});
-//		$('#searchInput').on('keyup', function () {
-//			if($(this).val().length > 2) {
-//				$.ajax({
-//					method: "POST",
-//					url: "/search",
-//					data: { searchString: $(this).val() },
-//					success: function (data) {
-//						console.log(data)
-//					}
-//				})
-//			}
-//		});
 	</script>
 {% endblock %}

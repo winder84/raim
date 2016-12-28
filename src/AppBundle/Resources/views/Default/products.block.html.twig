@@ -7,7 +7,7 @@
 			<div class="itemName">{{ product.name|raw }}</div>
 			<div class="itemPicture">
 				<noindex>
-					<a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}" alt="{{ product.name|raw }} {{ product.model|raw }}" {% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}onclick="yaCounter32562670.reachGoal('ON_LIST_CLICK'); return true;"{% endif %}>
+					<a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}" alt="{{ product.name|raw }} {{ product.model|raw }}">
 						<img src="{% if product.pictures.0 is not defined %}{{ asset('bundles/app/images/nopic.jpg') }}{% else %}{{ product.pictures.0 }}{% endif %}">
 					</a>
 				</noindex>

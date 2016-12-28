@@ -4,7 +4,8 @@
 	<div class="shopBlock" itemscope itemtype="http://schema.org/Product">
 		<div class="shopBlockDiv">
 			<div class="shopUniBlock">
-				<h1 itemprop="name" class="itemName">{% if product.vendor|raw is not empty %}{{ product.vendor.name|raw }} | {% endif %}{% if product.model is not empty %}{{ product.model|raw }}{% else %}{{ product.name|raw }}{% endif %}</h1>
+				<h1 itemprop="name" class="itemName">{% if product.vendor|raw is not empty %}{{ product.vendor.name|raw }} | {% endif %}
+					{% if product.model is not empty %}{{ product.model|raw }}{% else %}{{ product.name|raw }}{% endif %}</h1>
 				{% if product.isDelete %}
 					<img src="{{ product.pictures.0 }}" itemprop="image">
 				{% else %}
@@ -13,7 +14,7 @@
 							<ul class="slides">
 								{% for productPicture in product.pictures %}
 									<li>
-										<a href="{{ product.url|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина" {% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}onclick="yaCounter32562670.reachGoal('ON_DESCRIPTION_CLICK'); return true;"{% endif %}>
+										<a href="{{ product.url|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
 											<img src="{{ productPicture }}" itemprop="image">
 										</a>
 									</li>
@@ -33,8 +34,7 @@
 				{% else %}
 					<noindex>
 						<a class="productLink" rel="nofollow" target="_blank" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
-						 {{ product.model|raw }}"{% if (app.environment == 'prod') and ('.lan' not in app.request.host) %}
-							onclick="yaCounter32562670.reachGoal('ON_DESCRIPTION_BUY_CLICK'); return true;"{% endif %}>Купить в магазине {{ product.site }}</a>
+						 {{ product.model|raw }}">Купить в магазине {{ product.site }}</a>
 					</noindex>
 				{% endif %}
 			</div>
@@ -47,7 +47,15 @@
 					<h2 class="itemName">Характеристики:</h2>
 					<div itemprop="description" class="itemDesription">
 						{% for productPropertyValue in product.productPropertyValues %}
-							<li style=" margin: 10px 0 0 0; list-style: none;"><b>{{ productPropertyValue.productProperty.name }}</b>: {{ productPropertyValue.value|raw }}</li>
+							<li style=" margin: 10px 0 0 0; list-style: none;"><b>{{ productPropertyValue.productProperty.name }}</b>:
+								{% if productPropertyValue.isActive and productPropertyValue.alias and productGroupAlias %}
+									<a href="/filter/{{ productGroupAlias }}__param+{{ productPropertyValue.alias }}">
+								{% endif %}
+									{{ productPropertyValue.value|raw }}
+								{% if productPropertyValue.isActive and productPropertyValue.alias and productGroupAlias %}
+									</a>
+								{% endif %}
+							</li>
 						{% endfor %}
 					</div>
 				</div>

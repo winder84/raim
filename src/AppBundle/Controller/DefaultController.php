@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Category;
 use AppBundle\Entity\FilterAlias;
 use AppBundle\Entity\Stat;
+use AppBundle\Entity\Vendor;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -315,13 +317,21 @@ class DefaultController extends Controller
         $productKeywords[] =  $product->getName() . ' ' . $product->getModel() . ' купить';
         $this->metaTags['metaKeywords'] .= ',' . implode(',', $productKeywords);
         $this->getBreadcrumbs($product, 'product');
+        $productGroupAlias = '';
+        $breadcrumbsCategories = array_reverse($this->breadcrumbsCategories);
+        if ($breadcrumbsCategories[0] instanceof Category && $product->getVendor() instanceof Vendor) {
+            if ($breadcrumbsCategories[0]->getAlias() && $product->getVendor()->getAlias()) {
+                $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias() . '__vendor+' . $product->getVendor()->getAlias();
+            }
+        }
         return $this->render('AppBundle:Default:product.description.html.twig', array(
                 'product' => $product,
                 'metaTags' => $this->metaTags,
                 'likeProducts' => $likeProducts,
                 'paginatorData' => null,
                 'menuItems' => $this->menuItems,
-                'breadcrumbsCategories' => array_reverse($this->breadcrumbsCategories)
+                'breadcrumbsCategories' => $breadcrumbsCategories,
+                'productGroupAlias' => $productGroupAlias,
             )
         );
     }
@@ -391,6 +401,7 @@ class DefaultController extends Controller
         $searchd = $this->get('iakumai.sphinxsearch.search');
         $data = $searchd->search($request->query->get('searchString', ''), array('FilterAlias'));
         $options = array();
+        $searchArray = array();
         $em = $this->getDoctrine()->getManager();
         if (isset($data['matches'])) {
             $i = 0;
@@ -401,14 +412,15 @@ class DefaultController extends Controller
                 $filterAlias = $em
                     ->getRepository('AppBundle:FilterAlias')
                     ->findOneBy(array('alias' => $match['attrs']['alias']));
-//                $options[$match['attrs']['alias']] = $filterAlias->getAliasText();
+                $searchArray[$filterAlias->getAliasText()] = $match['attrs']['alias'];
                 $options[] = $filterAlias->getAliasText();
                 $i++;
             }
         }
         $response = new JsonResponse();
         $response->setData(array(
-            'options' => $options
+            'options' => $options,
+            'searchArray' => $searchArray,
         ));
         return $response;
     }
