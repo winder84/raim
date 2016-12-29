@@ -505,7 +505,7 @@ class DefaultController extends Controller
             ->from('AppBundle:Vendor', 'Vendor')
             ->leftJoin('Vendor.products', 'p')
             ->where('Vendor.isActive = 1')
-            ->having('cnt > 450')
+            ->having('cnt > 50')
             ->groupBy('Vendor.alias')
             ->orderBy('cnt', 'DESC')
             ->setMaxResults(15);
