@@ -15,9 +15,9 @@ class ExternalCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", nullable=true)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO", nullable=true)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
