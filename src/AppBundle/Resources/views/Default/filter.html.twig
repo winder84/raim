@@ -6,7 +6,7 @@
 		{% if filterAlias %}
 			<h1 class="shopTitle">{{ filterAlias.aliasText|capitalize }}</h1>
 		{%  endif %}
-		{% if filterAlias.description %}
+		{% if filterAlias.description is defined %}
 			<div style="margin: 0 auto; width: 800px;">
 				{{ filterAlias.description|raw }}
 			</div>
