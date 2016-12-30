@@ -84,6 +84,7 @@ class CategoryAdmin extends Admin
                 'context'  => 'engine',
                 'required' => false
             ))
+            ->add('parent', null, array('label' => 'Родительская категория'))
             ->add('externalCategories', 'sonata_type_collection', array(
                 'required' => false,
                 'cascade_validation' => true,

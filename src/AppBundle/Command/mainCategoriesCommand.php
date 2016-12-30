@@ -27,13 +27,31 @@ class mainCategoriesCommand extends ContainerAwareCommand
         $this->em = $this->getContainer()->get('doctrine')->getManager();
         $this->output = $output;
         $this->outputWriteLn('Start generate main categories');
-        $categories = $this->em
-                ->getRepository('AppBundle:ExternalCategory')
-                ->findBy(array(
-                    'parentId' => array(null, '', 0)
-                ));
+        $qb = $this->em->createQueryBuilder();
+
+        $qb->select('Product')
+            ->from('AppBundle:Product', 'Product')
+            ->where('Product.isDelete = 0')
+            ->groupBy('Product.category');
+        $query = $qb->getQuery();
+        $products = $query->getResult();
+        $productCategories = array();
+        foreach ($products as $product) {
+            $productCategoryId = $product->getCategory()->getId();
+            $productCategories[$productCategoryId] = $productCategoryId;
+        }
+        $this->outputWriteLn('Categories - ' . count($productCategories));
+
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('ExternalCategory')
+            ->from('AppBundle:ExternalCategory', 'ExternalCategory')
+            ->where('ExternalCategory.id IN (:productCategories)')
+            ->setParameter('productCategories', $productCategories);
+        $query = $qb->getQuery();
+        $categories = $query->getResult();
+        $this->outputWriteLn('CategoriesForWrite - ' . count($categories));
         foreach ($categories as $category) {
-            $categoryParentId = $category->getParentId();
+            $categoryParentId = $category->getInternalParentCategory();
             if (!$categoryParentId) {
                 $categoryName = $category->getName();
                 $mainCategory = $this->em

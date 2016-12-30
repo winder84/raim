@@ -40,6 +40,24 @@ class chpuGeneratorCommand extends ContainerAwareCommand
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
         $this->output = $output;
+        $this->outputWriteLn('Start generate chpu - sites');
+        $sites = $this->em
+                ->getRepository('AppBundle:Site')
+                ->findAll();
+        foreach ($sites as $site) {
+            $siteAlias = $site->getAlias();
+            if (empty($siteAlias)) {
+                $name = $site->getTitle();
+                $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
+                $site->setAlias($alias);
+                $this->em->persist($site);
+            }
+        }
+        $this->em->flush();
+        $this->em->clear('AppBundle\Entity\Site');
+        $this->outputWriteLn('End generate chpu - sites');
+
         $this->outputWriteLn('Start generate chpu - categories');
         $categories = $this->em
                 ->getRepository('AppBundle:Category')

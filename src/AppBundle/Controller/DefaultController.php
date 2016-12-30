@@ -319,9 +319,11 @@ class DefaultController extends Controller
         $this->getBreadcrumbs($product, 'product');
         $productGroupAlias = '';
         $breadcrumbsCategories = array_reverse($this->breadcrumbsCategories);
-        if ($breadcrumbsCategories[0] instanceof Category && $product->getVendor() instanceof Vendor) {
-            if ($breadcrumbsCategories[0]->getAlias() && $product->getVendor()->getAlias()) {
-                $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias() . '__vendor+' . $product->getVendor()->getAlias();
+        if ($breadcrumbsCategories) {
+            if ($breadcrumbsCategories[0] instanceof Category && $product->getVendor() instanceof Vendor) {
+                if ($breadcrumbsCategories[0]->getAlias() && $product->getVendor()->getAlias()) {
+                    $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias() . '__vendor+' . $product->getVendor()->getAlias();
+                }
             }
         }
         return $this->render('AppBundle:Default:product.description.html.twig', array(
@@ -456,25 +458,15 @@ class DefaultController extends Controller
         return $resultCategoriesIds;
     }
 
-    private function getInternalCategory($productCategory)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $parentCategory = $productCategory->getInternalParentCategory();
-        if (!$parentCategory) {
-            $parentCategory = $em
-                ->getRepository('AppBundle:ExternalCategory')
-                ->findOneBy(array('externalId' => $productCategory->getParentId()));
-            $this->getInternalCategory($parentCategory);
-        }
-        return $parentCategory;
-    }
-
     private function getMenuItems()
     {
         $em = $this->getDoctrine()->getManager();
         $resultCategories = $em
             ->getRepository('AppBundle:Category')
-            ->findAll();
+            ->findBy(array(
+                'isActive' => 1,
+                'parent' => null,
+            ));
         foreach ($resultCategories as $resultCategory) {
             $count = 0;
             $childCategoriesIds = $this->getChildCategoriesIds($resultCategory->getId());
@@ -542,32 +534,18 @@ class DefaultController extends Controller
                 $itemParentCategory = $item->getCategory();
                 if ($itemParentCategory) {
                     $this->breadcrumbsCategories[] = $itemParentCategory;
-                    if ($itemParentCategory->getParentId() != 0) {
-                        $this->getBreadcrumbs($itemParentCategory, 'exCategory');
+                    $internalCategory = $itemParentCategory->getInternalParentCategory();
+                    if ($internalCategory) {
+                        array_pop($this->breadcrumbsCategories);
                     }
+                    $this->getBreadcrumbs($internalCategory, 'category');
                 }
                 break;
-            case 'exCategory':
-                $em = $this->getDoctrine()->getManager();
-                $itemParentCategory = $em
-                    ->getRepository('AppBundle:ExternalCategory')
-                    ->findOneBy(array(
-                        'externalId' => $item->getParentId(),
-                        'isActive' => 1
-                    ));
-                if ($itemParentCategory) {
-                    $this->breadcrumbsCategories[] = $itemParentCategory;
-                    if ($itemParentCategory->getParentId() != 0) {
-                        $this->getBreadcrumbs($itemParentCategory, 'exCategory');
-                    } else {
-                        $internalParentCategory = $itemParentCategory->getInternalParentCategory();
-                        if ($internalParentCategory) {
-                            array_pop($this->breadcrumbsCategories);
-                            $this->breadcrumbsCategories[] = $internalParentCategory;
-                        }
-                    }
+            case 'category':
+                if ($item) {
+                    $this->breadcrumbsCategories[] = $item;
+                    $this->getBreadcrumbs($item->getParent(), 'category');
                 }
-                break;
         }
     }
 
@@ -653,7 +631,7 @@ class DefaultController extends Controller
         $filterAliasArray = array();
         $productCategory = $product->getCategory();
         if ($productCategory) {
-            $mainCategory = $this->getInternalCategory($productCategory)->getInternalParentCategory();
+            $mainCategory = $productCategory->getInternalParentCategory();
             if ($mainCategory) {
                 $filterAliasArray['alias'][] = 'category+' . $mainCategory->getAlias();
                 $filterAliasArray['name'][] = $mainCategory->getName();
@@ -672,6 +650,7 @@ class DefaultController extends Controller
                 'name' => implode(' ', $filterAliasArray['name'])
             );
         }
+
         $productPropertyValues = $product->getProductPropertyValues();
         foreach ($productPropertyValues as $productPropertyValue) {
             $productPropertyValueAlias = $productPropertyValue->getAlias();
@@ -682,6 +661,7 @@ class DefaultController extends Controller
                 );
             }
         }
+
         if ($filterAliasArray) {
             foreach ($arrayToWrite as $itemToWrite) {
                 $filterAlias = $em

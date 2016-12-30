@@ -80,7 +80,7 @@
 				{% for breadcrumbsCategory in breadcrumbsCategories %}
 					<li>
 						{% if breadcrumbsCategory.alias is defined %}
-							<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a> \
+							<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}
 						{% else %}
 							<a href="/exCategory/{{ breadcrumbsCategory.id }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}
 						{% endif %}
