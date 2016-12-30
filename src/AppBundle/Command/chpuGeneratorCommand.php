@@ -107,10 +107,10 @@ class chpuGeneratorCommand extends ContainerAwareCommand
         $qb = $this->em->createQueryBuilder();
         $qb->select('ProductProperty')
             ->from('AppBundle:ProductProperty', 'ProductProperty')
-            ->where('ProductProperty.isActive = 1')
-            ->andWhere('ProductProperty.alias IS NULL');
+            ->where('ProductProperty.isActive = 1');
         $query = $qb->getQuery();
         $productProperties = $query->getResult();
+        $i = 0;
         foreach ($productProperties as $productProperty) {
             $productPropertyAlias = $productProperty->getAlias();
             $name = $productProperty->getName();
@@ -121,16 +121,20 @@ class chpuGeneratorCommand extends ContainerAwareCommand
                 $this->em->persist($productProperty);
             }
             foreach ($productProperty->getValues() as $productPropertyValue) {
+                $i++;
                 $alias = $productPropertyValue->getAlias();
                 if (empty($alias)) {
                     $value = $productPropertyValue->getValue();
                     $alias = mb_substr(mb_strtolower($productProperty->getAlias() . '_' . $this->TransUrl(strip_tags($value)), 'UTF-8'), 0, 50,'UTF-8');
                     $alias = preg_replace("/__+/","_",$alias);
                     $productPropertyValue->setAlias($alias);
-                    $productPropertyValue->setPropValue($name . ' ' . $productPropertyValue->getValue());
+                    $productPropertyValue->setPropValue(mb_substr($name . ' ' . $productPropertyValue->getValue(), 0, 250,'UTF-8'));
                     $this->em->persist($productPropertyValue);
                 }
-                $this->em->flush();
+                if ($i % 5000 == 0) {
+                    $this->outputWriteLn('productPropertyValues - ' . $i);
+                    $this->em->flush();
+                }
             }
         }
         $this->em->flush();
