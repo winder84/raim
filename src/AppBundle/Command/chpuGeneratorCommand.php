@@ -76,6 +76,31 @@ class chpuGeneratorCommand extends ContainerAwareCommand
         $this->em->clear('AppBundle\Entity\Vendor');
         $this->outputWriteLn('End generate chpu - vendors');
 
+        $this->outputWriteLn('Start generate chpu - products');
+        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0")->iterate();
+        $i = 0;
+        while ((list($product) = $iterableResult->next()) !== false) {
+            $productAlias = $product->getAlias();
+            if (empty($productAlias)) {
+                $name = $product->getExternalId() . '_' . $product->getName();
+                $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
+                $alias = preg_replace("/__+/","_",$alias);
+                $product->setAlias($alias);
+                $this->em->persist($product);
+            }
+            if ($i % 10000 == 0) {
+                $this->em->flush();
+                $this->em->clear('AppBundle\Entity\Product');
+                $this->em->detach($product);
+                $this->outputWriteLn('Offers - ' . $i . '.');
+            }
+
+            $i++;
+        }
+        $this->em->flush();
+        $this->em->clear('AppBundle\Entity\Product');
+        $this->outputWriteLn('Offers - ' . $i . '.');
+        $this->outputWriteLn('End generate chpu - products');
 
         $this->outputWriteLn('Start generate chpu - productProperties');
         $productProperties = $this->em
@@ -109,32 +134,6 @@ class chpuGeneratorCommand extends ContainerAwareCommand
         $this->em->clear('AppBundle\Entity\ProductPropertyValue');
         $this->em->clear('AppBundle\Entity\ProductProperty');
         $this->outputWriteLn('End generate chpu - productProperties');
-
-        $this->outputWriteLn('Start generate chpu - products');
-        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0")->iterate();
-        $i = 0;
-        while ((list($product) = $iterableResult->next()) !== false) {
-            $productAlias = $product->getAlias();
-            if (empty($productAlias)) {
-                $name = $product->getExternalId() . '_' . $product->getName();
-                $alias = mb_strtolower($this->TransUrl($name), 'UTF-8');
-                $alias = preg_replace("/__+/","_",$alias);
-                $product->setAlias($alias);
-                $this->em->persist($product);
-            }
-            if ($i % 10000 == 0) {
-                $this->em->flush();
-                $this->em->clear('AppBundle\Entity\Product');
-                $this->em->detach($product);
-                $this->outputWriteLn('Offers - ' . $i . '.');
-            }
-
-            $i++;
-        }
-        $this->em->flush();
-        $this->em->clear('AppBundle\Entity\Product');
-        $this->outputWriteLn('Offers - ' . $i . '.');
-        $this->outputWriteLn('End generate chpu - products');
 
     }
 
