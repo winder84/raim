@@ -77,7 +77,7 @@ class chpuGeneratorCommand extends ContainerAwareCommand
         $this->outputWriteLn('End generate chpu - vendors');
 
         $this->outputWriteLn('Start generate chpu - products');
-        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0")->iterate();
+        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0 AND p.alias IS NULL")->iterate();
         $i = 0;
         while ((list($product) = $iterableResult->next()) !== false) {
             $productAlias = $product->getAlias();
