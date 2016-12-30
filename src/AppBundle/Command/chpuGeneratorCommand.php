@@ -103,11 +103,14 @@ class chpuGeneratorCommand extends ContainerAwareCommand
         $this->outputWriteLn('End generate chpu - products');
 
         $this->outputWriteLn('Start generate chpu - productProperties');
-        $productProperties = $this->em
-            ->getRepository('AppBundle:ProductProperty')
-            ->findBy(array(
-                'isActive' => 1
-            ));
+
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('ProductProperty')
+            ->from('AppBundle:ProductProperty', 'ProductProperty')
+            ->where('ProductProperty.isActive = 1')
+            ->andWhere('ProductProperty.alias IS NULL');
+        $query = $qb->getQuery();
+        $productProperties = $query->getResult();
         foreach ($productProperties as $productProperty) {
             $productPropertyAlias = $productProperty->getAlias();
             $name = $productProperty->getName();
