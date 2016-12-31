@@ -14,7 +14,7 @@
 							<ul class="slides">
 								{% for productPicture in product.pictures %}
 									<li>
-										<a href="{{ product.url|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
+										<a href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
 											<img src="{{ productPicture }}" itemprop="image">
 										</a>
 									</li>
