@@ -340,6 +340,9 @@ class DefaultController extends Controller
 
     /**
      * @Route("/filter/{alias}/{page}", name="filter_route")
+     * @param $alias
+     * @param int $page
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function filterAction($alias, $page = 1)
     {

@@ -33,16 +33,6 @@ class SitemapListener implements SitemapListenerInterface
         }
         $sites = null;
 
-        $vendors = $this->em
-            ->getRepository('AppBundle:Vendor')
-            ->findBy(array(
-                'isActive' => 1
-            ));
-        foreach ($vendors as $vendor) {
-            $urls[] = $this->router->generate('vendor_route', array('alias' => $vendor->getAlias()), true);
-        }
-        $vendors= null;
-
         $exCategories = $this->em
             ->getRepository('AppBundle:ExternalCategory')
             ->findBy(array(
@@ -53,40 +43,28 @@ class SitemapListener implements SitemapListenerInterface
         }
         $exCategories = null;
 
-        $categories = $this->em
-            ->getRepository('AppBundle:Category')
-            ->findBy(array(
-                'isActive' => 1
-            ));
-        foreach ($categories as $category) {
-            $urls[] = $this->router->generate('category_route', array('alias' => $category->getAlias()), true);
+        $filterAliases = $this->em
+            ->getRepository('AppBundle:FilterAlias')
+            ->findAll();
+        foreach ($filterAliases as $filterAlias) {
+            $alias = $filterAlias->getAlias();
+            if ($alias) {
+                $urls[] = $this->router->generate('filter_route', array('alias' => $alias), true);
+            }
         }
-        $categories = null;
+        $filterAliases = null;
 
-        $filterPages = array();
-        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0")->iterate();
-        $i = 0;
-        while ((list($product) = $iterableResult->next()) !== false) {
-            $urls[] = $this->router->generate('product_detail_route', array('alias' => $product->getAlias()), true);
-            $vendor = $product->getVendor();
-            $exCategory = $product->getCategory();
-            if ($vendor && $exCategory && $vendor->getIsActive() && $exCategory->getIsActive()) {
-                $path = $this->router->generate('filter_route', array(
-                    'vendorAlias' => mb_strtolower($vendor->getAlias(), 'UTF-8'),
-                    'categoryId' => $exCategory->getId(),
-                ), true);
-                $filterPages[$path] = $path;
-            }
-            if ($i % 10000 == 0) {
-                $this->em->flush();
-                $this->em->clear('AppBundle\Entity\Product');
-            }
-            $vendor = null;
-            $exCategory = null;
-            $i++;
-        }
-        $urls = array_merge($urls, array_values($filterPages));
-        $products = null;
+//        $iterableResult = $this->em->createQuery("SELECT p FROM 'AppBundle\Entity\Product' p WHERE p.isDelete = 0")->iterate();
+//        $i = 0;
+//        while ((list($product) = $iterableResult->next()) !== false) {
+//            $urls[] = $this->router->generate('product_detail_route', array('alias' => $product->getAlias()), true);
+//            if ($i % 10000 == 0) {
+//                $this->em->flush();
+//                $this->em->clear('AppBundle\Entity\Product');
+//            }
+//            $i++;
+//        }
+//        $products = null;
 
         foreach ($urls as $url) {
             $event->getGenerator()->addUrl(
