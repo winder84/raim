@@ -366,8 +366,10 @@ class DefaultController extends Controller
             $paginatorData = $this->getPaginatorData($paginatorPagesCount, $page, 1, 5, $path);
         }
         $this->getMenuItems();
-        $this->metaTags['metaTitle'] = $filterAlias->getAliasText();
-        $this->metaTags['metaDescription'] = 'купить ' . $filterAlias->getAliasText() . ' с доставкой';
+        if ($filterAlias) {
+            $this->metaTags['metaTitle'] = $filterAlias->getAliasText();
+            $this->metaTags['metaDescription'] = 'купить ' . $filterAlias->getAliasText() . ' с доставкой';
+        }
         $returnArray = array(
             'metaTags' => $this->metaTags,
             'paginatorData' => $paginatorData,
