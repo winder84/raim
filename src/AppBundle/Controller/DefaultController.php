@@ -104,7 +104,7 @@ class DefaultController extends Controller
         $this->metaTags['metaTitle'] = 'Описание магазина ' . $site->getTitle() . '. Купить товары "' . $site->getTitle() . '" с доставкой по России.';
 
         $qb = $em->createQueryBuilder();
-        $qb->select('Vendor, count(p.id) as cnt')
+        $qb->select('Vendor.name, Vendor.alias, count(p.id) as cnt')
             ->from('AppBundle:Vendor', 'Vendor')
             ->leftJoin('Vendor.products', 'p')
             ->where('Vendor.isActive = 1')
