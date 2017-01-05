@@ -36,9 +36,11 @@
 							<a class="dropdown-top">Популярные бренды</a>
 							<ul class="dropdown-inside">
 								{% if menuItems is not empty %}
-									{% for vendor in menuItems.vendors %}
-										<li><a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a></li>
-									{% endfor %}
+									{% if menuItems.vendors is defined %}
+										{% for vendor in menuItems.vendors %}
+											<li><a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a></li>
+										{% endfor %}
+									{% endif %}
 								{% endif %}
 							</ul>
 						</li>
