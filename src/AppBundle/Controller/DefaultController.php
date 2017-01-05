@@ -138,16 +138,14 @@ class DefaultController extends Controller
             ->findOneBy(array('alias' => $alias));
 
         $qb = $em->createQueryBuilder();
-        $qb->select('Vendor, count(Vendor) as cnt')
-            ->from('AppBundle:Product', 'Product')
-            ->leftJoin('AppBundle:Vendor', 'Vendor')
-            ->where('Vendor = Product.vendor')
+        $qb->select('Vendor.name, Vendor.alias, count(p.id) as cnt')
+            ->from('AppBundle:Vendor', 'Vendor')
+            ->leftJoin('Vendor.products', 'p')
+            ->where('Vendor.isActive = 1')
             ->andWhere('Vendor.site = :site')
-            ->andWhere('Vendor.isActive = 1')
-            ->setParameter('site', $site)
-            ->groupBy('Vendor')
+            ->groupBy('Vendor.id')
             ->orderBy('cnt', 'DESC')
-            ->setFirstResult(0)
+            ->setParameter('site', $site)
             ->setMaxResults(12);
         $query = $qb->getQuery();
         $vendors = $query->getResult();
