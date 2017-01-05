@@ -10,7 +10,7 @@
 		<h1>Бренды магазина:</h1>
 		<ul class="vendorBlockUl">
 			{% for vendor in vendors %}
-				{% if vendor.0 is defined %}
+				{% if vendor.0 is not null %}
 					<li>
 						<a href="/filter/vendor+{{ vendor.0.alias }}">{{ vendor.0.name }}</a>
 						<p>({{ vendor.0.products|length }} шт.)</p>
