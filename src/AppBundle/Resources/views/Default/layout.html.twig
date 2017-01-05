@@ -25,9 +25,7 @@
 							<ul class="dropdown-inside">
 								{% if menuItems is not empty %}
 									{% for category in menuItems.categories %}
-										{% if loop.index < 20 %}
-											<li><a href="/filter/category+{{ category.alias }}">{{ category.name }}</a></li>
-										{% endif %}
+										<li><a href="/filter/category+{{ category.alias }}">{{ category.name }}</a></li>
 									{% endfor %}
 								{% endif %}
 							</ul>

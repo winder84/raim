@@ -466,12 +466,14 @@ class DefaultController extends Controller
     private function getMenuItems()
     {
         $em = $this->getDoctrine()->getManager();
-        $resultCategories = $em
-            ->getRepository('AppBundle:Category')
-            ->findBy(array(
-                'isActive' => 1,
-                'parent' => null,
-            ));
+        $qb = $em->createQueryBuilder();
+        $qb->select('Category')
+            ->from('AppBundle:Category', 'Category')
+            ->where('Category.isActive = 1')
+            ->andWhere('Category.parent is null')
+            ->setMaxResults(20);
+        $query = $qb->getQuery();
+        $resultCategories = $query->getResult();
         foreach ($resultCategories as $resultCategory) {
             $count = 0;
             $childCategoriesIds = $this->getChildCategoriesIds($resultCategory->getId());
