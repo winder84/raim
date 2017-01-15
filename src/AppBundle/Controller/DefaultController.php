@@ -363,7 +363,7 @@ class DefaultController extends Controller
         }
         $this->getMenuItems();
         if ($filterAlias) {
-            $this->metaTags['metaTitle'] = $filterAlias->getAliasText();
+            $this->metaTags['metaTitle'] = 'Купить ' . $filterAlias->getAliasText() . ' со скидкой';;
             $this->metaTags['metaDescription'] = 'купить ' . $filterAlias->getAliasText() . ' с доставкой';
         }
         $returnArray = array(
@@ -634,6 +634,7 @@ class DefaultController extends Controller
 
     private function checkAndInsertFilterAliasByProduct($product)
     {
+        $arrayToWrite = array();
         $em = $this->getDoctrine()->getManager();
         $filterAliasArray = array();
         $productCategory = $product->getCategory();
@@ -642,6 +643,10 @@ class DefaultController extends Controller
             if ($mainCategory) {
                 $filterAliasArray['alias'][] = 'category+' . $mainCategory->getAlias();
                 $filterAliasArray['name'][] = $mainCategory->getName();
+                $arrayToWrite[] = array(
+                    'alias' => 'category+' . $mainCategory->getAlias(),
+                    'name' => $mainCategory->getName(),
+                );
             }
         }
 
@@ -649,9 +654,14 @@ class DefaultController extends Controller
         if ($productVendor) {
             $filterAliasArray['alias'][] = 'vendor+' . $productVendor->getAlias();
             $filterAliasArray['name'][] = $productVendor->getName();
+            $arrayToWrite[] = array(
+                'alias' => 'vendor+' . $productVendor->getAlias(),
+                'name' => $productVendor->getName(),
+            );
         }
-        $arrayToWrite = array();
         if ($filterAliasArray) {
+            foreach ($filterAliasArray as $filterAlias) {
+            }
             $arrayToWrite[] = array(
                 'alias' => implode('__', $filterAliasArray['alias']),
                 'name' => implode(' ', $filterAliasArray['name'])
