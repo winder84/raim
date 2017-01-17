@@ -118,5 +118,11 @@
 				})
 			}
 		});
+		function extractor(query) {
+			var result = /([^,]+)$/.exec(query);
+			if(result && result[1])
+				return result[1].trim();
+			return '';
+		}
 	</script>
 {% endblock %}
