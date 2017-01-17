@@ -107,6 +107,7 @@
 					return process(data.options);
 				});
 			},
+			matcher: function () { return true;},
 			updater: function(item) {
 				document.location.href = '/filter/' + searchArray[item];
 			}
