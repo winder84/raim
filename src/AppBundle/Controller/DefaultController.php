@@ -412,7 +412,7 @@ class DefaultController extends Controller
             $i = 0;
             foreach ($data['matches'] as $match) {
                 if ($i >=20) {
-                    exit(1);
+                    break;
                 }
                 $filterAlias = $em
                     ->getRepository('AppBundle:FilterAlias')
