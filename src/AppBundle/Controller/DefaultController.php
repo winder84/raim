@@ -405,7 +405,7 @@ class DefaultController extends Controller
     public function searchAction(Request $request) {
         $searchd = $this->get('iakumai.sphinxsearch.search');
         $searchString = $request->request->get('searchString', '');
-        $searchString = str_replace(' ', '*', $searchString);
+//        $searchString = str_replace(' ', '*', $searchString);
         $data = $searchd->search($searchString, array('FilterAlias'));
         $options = array();
         $searchArray = array();
