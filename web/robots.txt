@@ -3,4 +3,8 @@
 
 User-agent: *
 Allow: /
-Sitemap: http://raiment-shop.ru/sitemap.xml
+Sitemap: https://raiment-shop.ru/sitemap.xml
+Host: https://raiment-shop.ru
+Disallow: *?*
+Disallow: /search*
+Disallow: /product/buy*
