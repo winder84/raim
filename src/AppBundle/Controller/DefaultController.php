@@ -319,7 +319,8 @@ class DefaultController extends Controller
         if ($breadcrumbsCategories) {
             if ($breadcrumbsCategories[0] instanceof Category && $product->getVendor() instanceof Vendor) {
                 if ($breadcrumbsCategories[0]->getAlias() && $product->getVendor()->getAlias()) {
-                    $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias() . '__vendor+' . $product->getVendor()->getAlias();
+//                    $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias() . '__vendor+' . $product->getVendor()->getAlias();
+                    $productGroupAlias = 'category+' . $breadcrumbsCategories[0]->getAlias();
                 }
             }
         }
