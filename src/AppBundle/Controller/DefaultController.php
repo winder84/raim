@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\ExternalCategory;
 use AppBundle\Entity\FilterAlias;
 use AppBundle\Entity\Stat;
 use AppBundle\Entity\Vendor;
@@ -639,10 +640,11 @@ class DefaultController extends Controller
         $arrayToWrite = array();
         $em = $this->getDoctrine()->getManager();
         $filterAliasArray = array();
+        /** @var ExternalCategory $productCategory */
         $productCategory = $product->getCategory();
         if ($productCategory) {
             $mainCategory = $productCategory->getInternalParentCategory();
-            if ($mainCategory) {
+            if ($mainCategory && $mainCategory->getAlias()) {
                 $filterAliasArray['alias'][] = 'category+' . $mainCategory->getAlias();
                 $filterAliasArray['name'][] = $mainCategory->getName();
                 $arrayToWrite[] = array(
@@ -652,8 +654,9 @@ class DefaultController extends Controller
             }
         }
 
+        /** @var Vendor $productVendor */
         $productVendor = $product->getVendor();
-        if ($productVendor) {
+        if ($productVendor && $productVendor->getAlias()) {
             $filterAliasArray['alias'][] = 'vendor+' . $productVendor->getAlias();
             $filterAliasArray['name'][] = $productVendor->getName();
             $arrayToWrite[] = array(
@@ -662,8 +665,6 @@ class DefaultController extends Controller
             );
         }
         if ($filterAliasArray) {
-            foreach ($filterAliasArray as $filterAlias) {
-            }
             $arrayToWrite[] = array(
                 'alias' => implode('__', $filterAliasArray['alias']),
                 'name' => implode(' ', $filterAliasArray['name'])
@@ -674,10 +675,12 @@ class DefaultController extends Controller
         foreach ($productPropertyValues as $productPropertyValue) {
             $productPropertyValueAlias = $productPropertyValue->getAlias();
             if ($productPropertyValueAlias) {
-                $arrayToWrite[] = array(
-                    'alias' => implode('__', $filterAliasArray['alias']) . '__' . 'param+' . $productPropertyValueAlias,
-                    'name' => implode(' ', $filterAliasArray['name']) . ' ' . $productPropertyValue->getPropValue()
-                );
+                foreach ($filterAliasArray as $filterAlias) {
+                    $arrayToWrite[] = array(
+                        'alias' => $filterAlias['alias'] . '__' . 'param+' . $productPropertyValueAlias,
+                        'name' => $filterAlias['name'] . ' ' . $productPropertyValue->getPropValue()
+                    );
+                }
             }
         }
 
