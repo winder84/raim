@@ -637,19 +637,20 @@ class DefaultController extends Controller
 
     private function checkAndInsertFilterAliasByProduct($product)
     {
-        $arrayToWrite = array();
         $em = $this->getDoctrine()->getManager();
+        $arrayToWrite = array();
         $filterAliasArray = array();
+
         /** @var ExternalCategory $productCategory */
         $productCategory = $product->getCategory();
         if ($productCategory) {
             $mainCategory = $productCategory->getInternalParentCategory();
             if ($mainCategory && $mainCategory->getAlias()) {
-                $filterAliasArray['alias'][] = 'category+' . $mainCategory->getAlias();
-                $filterAliasArray['name'][] = $mainCategory->getName();
-                $arrayToWrite[] = array(
-                    'alias' => 'category+' . $mainCategory->getAlias(),
-                    'name' => $mainCategory->getName(),
+                $mainCategoryAlias = $mainCategory->getAlias();
+                $mainCategoryName = $mainCategory->getName();
+                $filterAliasArray['category'] = $arrayToWrite[] = array(
+                    'alias' => 'category+' . $mainCategoryAlias,
+                    'name' => $mainCategoryName,
                 );
             }
         }
@@ -657,17 +658,18 @@ class DefaultController extends Controller
         /** @var Vendor $productVendor */
         $productVendor = $product->getVendor();
         if ($productVendor && $productVendor->getAlias()) {
-            $filterAliasArray['alias'][] = 'vendor+' . $productVendor->getAlias();
-            $filterAliasArray['name'][] = $productVendor->getName();
-            $arrayToWrite[] = array(
-                'alias' => 'vendor+' . $productVendor->getAlias(),
-                'name' => $productVendor->getName(),
+            $vendorName = $productVendor->getName();
+            $vendorAlias = $productVendor->getAlias();
+            $filterAliasArray['vendor'] = $arrayToWrite[] = array(
+                'alias' => 'vendor+' . $vendorAlias,
+                'name' => $vendorName,
             );
         }
+
         if ($filterAliasArray) {
             $arrayToWrite[] = array(
-                'alias' => implode('__', $filterAliasArray['alias']),
-                'name' => implode(' ', $filterAliasArray['name'])
+                'alias' => $filterAliasArray['category']['alias'] . '__' . $filterAliasArray['vendor']['alias'],
+                'name' => $filterAliasArray['category']['name'] . ' ' . $filterAliasArray['vendor']['name']
             );
         }
 
