@@ -48,15 +48,22 @@
 					<div itemprop="description" class="itemDesription">
 						{% for productPropertyValue in product.productPropertyValues %}
 							<li style=" margin: 10px 0 0 0; list-style: none;"><b>{{ productPropertyValue.productProperty.name }}</b>:
-								{% if productPropertyValue.isActive and productPropertyValue.alias and productGroupAlias %}
-									<a href="/filter/{{ productGroupAlias }}__param+{{ productPropertyValue.alias }}">
+								{% if productPropertyValue.isActive and productPropertyValue.alias and categoryAlias %}
+									<a href="/filter/{{ categoryAlias }}__param+{{ productPropertyValue.alias }}">
 								{% endif %}
 									{{ productPropertyValue.value|raw }}
-								{% if productPropertyValue.isActive and productPropertyValue.alias and productGroupAlias %}
+								{% if productPropertyValue.isActive and productPropertyValue.alias and categoryAlias %}
 									</a>
 								{% endif %}
 							</li>
 						{% endfor %}
+						{% if productGroupAlias %}
+							<li style=" margin: 10px 0 0 0; list-style: none;">
+								<a href="/filter/{{ productGroupAlias.alias }}">
+									{{ productGroupAlias.name|raw }}
+								</a>
+							</li>
+						{% endif %}
 					</div>
 				</div>
 			{% endif %}
