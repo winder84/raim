@@ -316,6 +316,7 @@ class DefaultController extends Controller
         $this->getBreadcrumbs($product, 'product');
         $productGroupAlias = '';
         $breadcrumbsCategories = array_reverse($this->breadcrumbsCategories);
+        $categoryAlias = '';
         if ($breadcrumbsCategories) {
             if ($breadcrumbsCategories[0] instanceof Category && $product->getVendor() instanceof Vendor) {
                 if ($breadcrumbsCategories[0]->getAlias() && $product->getVendor()->getAlias()) {
@@ -671,7 +672,7 @@ class DefaultController extends Controller
             );
         }
 
-        if ($filterAliasArray) {
+        if (isset($filterAliasArray['category']) && isset($filterAliasArray['vendor'])) {
             $arrayToWrite[] = array(
                 'alias' => $filterAliasArray['category']['alias'] . '__' . $filterAliasArray['vendor']['alias'],
                 'name' => $filterAliasArray['category']['name'] . ' ' . $filterAliasArray['vendor']['name']
