@@ -1,25 +1,27 @@
-<div class="paginator">
-	<ul>
-		{% if paginator.currentpage != 1 %}
-			<li> <a class="previous" href="{{ path }}{{ paginator.currentpage-1 }}">Назад</a></li>
-		{% endif %}
-		{% for i in 1..paginator.numpages%}
-			{% if paginator.range.0 > 2 and i == paginator.range.0 %}
-				...
+<noindex>
+	<div class="paginator">
+		<ul>
+			{% if paginator.currentpage != 1 %}
+				<li> <a rel="nofollow" class="previous" href="{{ path }}{{ paginator.currentpage-1 }}">Назад</a></li>
 			{% endif %}
-			{%  if(i==1 or i==paginator.numpages or i in paginator.range) %}
-				{% if i==paginator.currentpage %}
-					<li><a class="active">{{i}}</a></li>
-				{% else %}
-					<li><a href="{{ path }}{{ i }}">{{i}}</a></li>
+			{% for i in 1..paginator.numpages%}
+				{% if paginator.range.0 > 2 and i == paginator.range.0 %}
+					...
 				{% endif %}
+				{%  if(i==1 or i==paginator.numpages or i in paginator.range) %}
+					{% if i==paginator.currentpage %}
+						<li><a rel="nofollow" class="active">{{i}}</a></li>
+					{% else %}
+						<li><a rel="nofollow" href="{{ path }}{{ i }}">{{i}}</a></li>
+					{% endif %}
+				{% endif %}
+				{% if paginator.range[paginator.midrange -1] < paginator.numpages -1 and i == paginator.range[paginator.midrange-1] %}
+					...
+				{% endif %}
+			{% endfor %}
+			{% if paginator.currentpage != paginator.numpages %}
+				<li> <a rel="nofollow" class="next" href="{{ path }}{{ paginator.currentpage+1 }}">Вперед</a></li>
 			{% endif %}
-			{% if paginator.range[paginator.midrange -1] < paginator.numpages -1 and i == paginator.range[paginator.midrange-1] %}
-				...
-			{% endif %}
-		{% endfor %}
-		{% if paginator.currentpage != paginator.numpages %}
-			<li> <a class="next" href="{{ path }}{{ paginator.currentpage+1 }}">Вперед</a></li>
-		{% endif %}
-	</ul>
-</div>
+		</ul>
+	</div>
+</noindex>
