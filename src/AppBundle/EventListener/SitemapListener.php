@@ -33,15 +33,15 @@ class SitemapListener implements SitemapListenerInterface
         }
         $sites = null;
 
-        $exCategories = $this->em
-            ->getRepository('AppBundle:ExternalCategory')
-            ->findBy(array(
-                'isActive' => 1
-            ));
-        foreach ($exCategories as $exCategory) {
-            $urls[] = $this->router->generate('ex_category_route', array('id' => $exCategory->getId()), true);
-        }
-        $exCategories = null;
+//        $exCategories = $this->em
+//            ->getRepository('AppBundle:ExternalCategory')
+//            ->findBy(array(
+//                'isActive' => 1
+//            ));
+//        foreach ($exCategories as $exCategory) {
+//            $urls[] = $this->router->generate('ex_category_route', array('id' => $exCategory->getId()), true);
+//        }
+//        $exCategories = null;
 
         $filterAliases = $this->em
             ->getRepository('AppBundle:FilterAlias')

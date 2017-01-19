@@ -8,4 +8,4 @@ Host: https://raiment-shop.ru
 Disallow: *?*
 Disallow: /search*
 Disallow: /product/buy*
-Disallow: /product/detail*
+# Disallow: /product/detail*
