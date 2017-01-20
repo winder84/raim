@@ -61,18 +61,15 @@ class clearSiteCommand extends ContainerAwareCommand
 
     private function clearSite($site)
     {
-        $productsToDelete = $this->em
-            ->getRepository('AppBundle:Product')
-            ->findBy(array('site' => $site));
-//        $qb = $this->em->createQueryBuilder();
-//        $qb->select('Product')
-//            ->from('AppBundle:Product', 'Product')
-//            ->where('Product.site = :site')
-//            ->andWhere('Product.version != :newVersion')
-//            ->setParameter('site', $site)
-//            ->setParameter('newVersion', $site->getVersion());
-//        $query = $qb->getQuery();
-//        $productsToDelete = $query->getResult();
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('Product')
+            ->from('AppBundle:Product', 'Product')
+            ->where('Product.site = :site')
+            ->andWhere('Product.version != :newVersion')
+            ->setParameter('site', $site)
+            ->setParameter('newVersion', $site->getVersion());
+        $query = $qb->getQuery();
+        $productsToDelete = $query->getResult();
         $nowDateTime = new \DateTime();
         $i = 0;
         foreach ($productsToDelete as $productToDelete) {
@@ -90,7 +87,6 @@ class clearSiteCommand extends ContainerAwareCommand
 //                $productToDelete->setUpdated(new \DateTime());
                 $productsToDeleteArray[] = $productToDelete;
             }
-            var_dump($deletedProductsArray);
             $i++;
             if ($i %100 == 0) {
                 $this->em->flush();
