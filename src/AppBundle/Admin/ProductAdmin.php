@@ -32,8 +32,7 @@ class ProductAdmin extends Admin
                 )
             )
             ->add('isDelete', 'doctrine_orm_boolean', array(
-                    'label'    => 'На удаление',
-                    'required' => false,
+                    'label'    => 'На удаление'
                 )
             )
         ;
