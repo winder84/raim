@@ -65,25 +65,27 @@ class clearSiteCommand extends ContainerAwareCommand
         $qb->select('Product')
             ->from('AppBundle:Product', 'Product')
             ->where('Product.site = :site')
-            ->andWhere('TRUNCATE(Product.version, 2) != :newVersion')
-            ->setParameter('site', $site)
-            ->setParameter('newVersion', $site->getVersion());
+            ->setParameter('site', $site);
         $query = $qb->getQuery();
         $productsToDelete = $query->getResult();
         $nowDateTime = new \DateTime();
         $i = 0;
         foreach ($productsToDelete as $productToDelete) {
+            if ($productToDelete->getVersion() == $site->getVersion()) {
+                continue;
+            }
             $productUpdated = $productToDelete->getUpdated();
             if ($productToDelete->getIsDelete()) {
                 if ($nowDateTime->diff($productUpdated)->days >= 31) {
                     $deletedProductsArray[] = $productToDelete;
-                    $this->em->remove($productToDelete);
+//                    $this->em->remove($productToDelete);
                 }
             } else {
-                $productToDelete->setIsDelete(true);
-                $productToDelete->setUpdated(new \DateTime());
+//                $productToDelete->setIsDelete(true);
+//                $productToDelete->setUpdated(new \DateTime());
                 $productsToDeleteArray[] = $productToDelete;
             }
+            var_dump($deletedProductsArray);
             $i++;
             $this->em->flush();
             if ($i %100 == 0) {
