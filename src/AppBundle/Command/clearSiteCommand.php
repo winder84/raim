@@ -65,7 +65,7 @@ class clearSiteCommand extends ContainerAwareCommand
         $qb->select('Product')
             ->from('AppBundle:Product', 'Product')
             ->where('Product.site = :site')
-            ->andWhere('Product.version != :newVersion')
+            ->andWhere('TRUNCATE(Product.version, 2) != :newVersion')
             ->setParameter('site', $site)
             ->setParameter('newVersion', $site->getVersion());
         $query = $qb->getQuery();
