@@ -63,7 +63,7 @@ class clearSiteCommand extends ContainerAwareCommand
     {
         $productsToDelete = $this->em
             ->getRepository('AppBundle:Product')
-            ->findBy(array('siteId' => $site->getId()));
+            ->findBy(array('site' => $site));
 //        $qb = $this->em->createQueryBuilder();
 //        $qb->select('Product')
 //            ->from('AppBundle:Product', 'Product')
