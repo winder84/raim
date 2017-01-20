@@ -35,8 +35,8 @@ class ProductAdmin extends Admin
                     'label'    => 'На удаление',
                     'required' => false,
                     'choices' => array(
-                        1 => 'label_type_yes', // or 'True'
-                        2 => 'label_type_no' // or 'False'
+                        1 => 'True', // or 'True'
+                        2 => 'False' // or 'False'
                     )
                 )
             )
