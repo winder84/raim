@@ -83,6 +83,7 @@ class clearSiteCommand extends ContainerAwareCommand
                 $productToDelete->setUpdated(new \DateTime());
                 $productsToDeleteArray[] = $productToDelete;
             }
+            $this->em->flush();
         }
         $this->em->flush();
         $this->em->clear('AppBundle\Entity\Product');
