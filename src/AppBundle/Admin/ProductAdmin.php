@@ -27,7 +27,8 @@ class ProductAdmin extends Admin
             ->add('vendor', null, array('label' => 'Бренд'))
             ->add('version', null, array('label' => 'Версия'))
             ->add('ourChoice', null, array('label' => 'Наш выбор'))
-            ->add('isDelete', null, array('label' => 'На удаление'))
+//            ->add('isDelete', null, array('label' => 'На удаление'))
+            ->add('isDelete', 'doctrine_orm_choice', array(), 'choice' , array('choices' => array('Да' => '1', 'Нет' => '0')))
         ;
     }
 
