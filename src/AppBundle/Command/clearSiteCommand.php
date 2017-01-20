@@ -71,6 +71,7 @@ class clearSiteCommand extends ContainerAwareCommand
         $query = $qb->getQuery();
         $productsToDelete = $query->getResult();
         $nowDateTime = new \DateTime();
+        $i = 0;
         foreach ($productsToDelete as $productToDelete) {
             $productUpdated = $productToDelete->getUpdated();
             if ($productToDelete->getIsDelete()) {
@@ -83,7 +84,11 @@ class clearSiteCommand extends ContainerAwareCommand
                 $productToDelete->setUpdated(new \DateTime());
                 $productsToDeleteArray[] = $productToDelete;
             }
+            $i++;
             $this->em->flush();
+            if ($i %100 == 0) {
+                $this->outputWriteLn('Offers $i - ' . $i);
+            }
         }
         $this->em->flush();
         $this->em->clear('AppBundle\Entity\Product');
