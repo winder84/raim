@@ -74,9 +74,9 @@ class clearSiteCommand extends ContainerAwareCommand
         foreach ($productsToDelete as $productToDelete) {
             $productUpdated = $productToDelete->getUpdated();
             if ($productToDelete->getIsDelete()) {
-                if ($nowDateTime->diff($productUpdated)->days >= 14) {
+                if ($nowDateTime->diff($productUpdated)->days >= 31) {
                     $deletedProductsArray[] = $productToDelete;
-//                    $this->em->remove($productToDelete);
+                    $this->em->remove($productToDelete);
                 }
             } else {
                 $productToDelete->setIsDelete(true);
