@@ -34,6 +34,7 @@ class CategoryAdmin extends Admin
             ->add('id')
             ->add('name', null, array('label' => 'Наименование'))
             ->add('alias', null, array('label' => 'Alias', 'required' => false))
+            ->add('parent', null, array('label' => 'Родительская категория'))
             ->add('ourChoice', null, array(
                     'label'    => 'Наш выбор',
                     'required' => false,
