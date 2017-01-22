@@ -84,9 +84,9 @@ class mainCategoriesCommand extends ContainerAwareCommand
 
         $this->outputWriteLn('CategoriesForWrite - ' . count($categories));
         foreach ($categories as $category) {
-            $categoryParentId = $category->getInternalParentCategory();
+            $categoryParent = $category->getInternalParentCategory();
 
-            if ($categoryParentId) {
+            if ($categoryParent) {
                 continue;
             }
 
@@ -106,7 +106,9 @@ class mainCategoriesCommand extends ContainerAwareCommand
                 $this->em->flush();
             }
 
-            $category->setInternalParentCategory($mainCategory);
+            if (!$category->getInternalParentCategory()) {
+                $category->setInternalParentCategory($mainCategory);
+            }
 
             $this->em->flush();
         }

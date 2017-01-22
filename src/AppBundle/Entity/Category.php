@@ -81,18 +81,18 @@ class Category
      */
     private $isActive = false;
 
-    /**
-     * One Category has Many Categories.
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="parent")
-     */
-    private $children;
-
-    /**
-     * Many Categories have One Category.
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="children", cascade={"detach"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-     */
-    private $parent;
+//    /**
+//     * One Category has Many Categories.
+//     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="parent")
+//     */
+//    private $children;
+//
+//    /**
+//     * Many Categories have One Category.
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category", inversedBy="children", cascade={"detach"})
+//     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+//     */
+//    private $parent;
 
     /**
      * Constructor
@@ -341,58 +341,58 @@ class Category
     }
 
     /**
-     * Add children
-     *
-     * @param \AppBundle\Entity\Category $children
-     * @return Category
-     */
-    public function addChild(\AppBundle\Entity\Category $children)
-    {
-        $this->children[] = $children;
-
-        return $this;
-    }
-
-    /**
-     * Remove children
-     *
-     * @param \AppBundle\Entity\Category $children
-     */
-    public function removeChild(\AppBundle\Entity\Category $children)
-    {
-        $this->children->removeElement($children);
-    }
-
-    /**
-     * Get children
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * Set parent
-     *
-     * @param \AppBundle\Entity\Category $parent
-     * @return Category
-     */
-    public function setParent(\AppBundle\Entity\Category $parent = null)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return \AppBundle\Entity\Category 
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
+//     * Add children
+//     *
+//     * @param \AppBundle\Entity\Category $children
+//     * @return Category
+//     */
+//    public function addChild(\AppBundle\Entity\Category $children)
+//    {
+//        $this->children[] = $children;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove children
+//     *
+//     * @param \AppBundle\Entity\Category $children
+//     */
+//    public function removeChild(\AppBundle\Entity\Category $children)
+//    {
+//        $this->children->removeElement($children);
+//    }
+//
+//    /**
+//     * Get children
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getChildren()
+//    {
+//        return $this->children;
+//    }
+//
+//    /**
+//     * Set parent
+//     *
+//     * @param \AppBundle\Entity\Category $parent
+//     * @return Category
+//     */
+//    public function setParent(\AppBundle\Entity\Category $parent = null)
+//    {
+//        $this->parent = $parent;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get parent
+//     *
+//     * @return \AppBundle\Entity\Category
+//     */
+//    public function getParent()
+//    {
+//        return $this->parent;
+//    }
 }
