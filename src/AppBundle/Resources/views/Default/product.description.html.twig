@@ -7,7 +7,7 @@
 				<h1 itemprop="name" class="itemName">{% if product.vendor|raw is not empty %}{{ product.vendor.name|raw }} | {% endif %}
 					{% if product.model is not empty %}{{ product.model|raw }}{% else %}{{ product.name|raw }}{% endif %}</h1>
 				{% if product.isDelete %}
-					<img src="{{ product.pictures.0 }}" itemprop="image">
+					<img src="{{ product.pictures.0|replace({'http:': "https:"}) }}" itemprop="image">
 				{% else %}
 					<noindex>
 						<div class="flexslider">
@@ -15,7 +15,7 @@
 								{% for productPicture in product.pictures %}
 									<li>
 										<a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
-											<img src="{{ productPicture }}" itemprop="image">
+											<img src="{{ productPicture|replace({'http:': "https:"}) }}" itemprop="image">
 										</a>
 									</li>
 								{% endfor %}
