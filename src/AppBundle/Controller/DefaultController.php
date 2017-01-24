@@ -570,10 +570,12 @@ class DefaultController extends Controller
                             'site' => $item->getSite(),
                             'isActive' => 1,
                         ));
-                    $internalCategory = $itemParent->getInternalParentCategory();
-                    if ($internalCategory) {
-                        $this->breadcrumbsCategories[] = $internalCategory;
-                        $this->getBreadcrumbs($itemParent, 'category');
+                    if ($itemParent) {
+                        $internalCategory = $itemParent->getInternalParentCategory();
+                        if ($internalCategory) {
+                            $this->breadcrumbsCategories[] = $internalCategory;
+                            $this->getBreadcrumbs($itemParent, 'category');
+                        }
                     }
                 }
         }
