@@ -40,7 +40,8 @@ class DefaultController extends Controller
         $qb->select('Stat.productId, COUNT(Stat.productId) AS cnt')
             ->from('AppBundle:Stat', 'Stat')
             ->groupBy('Stat.productId')
-            ->orderBy('cnt', 'DESC');
+            ->orderBy('cnt', 'DESC')
+            ->setMaxResults($this->chooseProductsCount);
         $query = $qb->getQuery();
         $productsStats = $query->getResult();
         $productsIds = array();
