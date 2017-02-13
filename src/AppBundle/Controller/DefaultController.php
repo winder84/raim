@@ -350,7 +350,7 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if ($alias) {
-            str_replace(' ', '+', $alias);
+            $alias = str_replace(' ', '+', $alias);
         }
         $filterAlias = $em
             ->getRepository('AppBundle:FilterAlias')
