@@ -349,6 +349,9 @@ class DefaultController extends Controller
     public function filterAction($alias, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
+        if ($alias) {
+            str_replace(' ', '+', $alias);
+        }
         $filterAlias = $em
             ->getRepository('AppBundle:FilterAlias')
             ->findOneBy(array(
