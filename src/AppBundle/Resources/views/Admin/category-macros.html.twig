@@ -1,0 +1,13 @@
+{% macro category_links(links) %}
+    {% for link in links %}
+        {
+        text: "{{ link.name }}",
+        href: "/admin/app/category/{{ link.id }}/edit",
+        {% if link.children is not empty%}
+            nodes: [
+                {{ _self.category_links(link.children) }}
+            ],
+        {% endif %}
+        },
+    {% endfor %}
+{% endmacro %}

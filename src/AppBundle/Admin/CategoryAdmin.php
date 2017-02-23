@@ -34,7 +34,7 @@ class CategoryAdmin extends Admin
             ->add('id')
             ->add('name', null, array('label' => 'Наименование'))
             ->add('alias', null, array('label' => 'Alias', 'required' => false))
-//            ->add('parent', null, array('label' => 'Родительская категория'))
+            ->add('parent', null, array('label' => 'Родительская категория'))
             ->add('ourChoice', null, array(
                     'label'    => 'Наш выбор',
                     'required' => false,
@@ -85,11 +85,11 @@ class CategoryAdmin extends Admin
                 'context'  => 'engine',
                 'required' => false
             ))
-//            ->add('parent', null, array('label' => 'Родительская категория'))
+            ->add('parent', null, array('label' => 'Родительская категория'))
             ->add('externalCategories', 'sonata_type_collection', array(
                 'required' => false,
                 'cascade_validation' => true,
-                'by_reference' => false,
+                'by_reference' => true,
                 'label' => 'Категории магазинов',
             ), array(
                 'edit' => 'inline',

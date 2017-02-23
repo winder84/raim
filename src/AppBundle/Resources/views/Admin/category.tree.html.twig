@@ -1,0 +1,28 @@
+{% extends base_template %}
+
+{% block title %}{{ 'title_dashboard'|trans({}, 'SonataAdminBundle') }}{% endblock%}
+{% block breadcrumb %}{% endblock %}
+{% block content %}
+    <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap-treeview.css') }}" />
+    <script src="{{ asset('bundles/app/js/bootstrap-treeview.js') }}"></script>
+    <div class="row-fluid">
+        <div class="span6">
+            <a href="{{ url('sonata_admin_categoryTree') }}" class="btn btn-default">Дерево категорий</a>
+        </div>
+    </div>
+    <br />
+    {% import "AppBundle:Admin:category-macros.html.twig" as macros %}
+    <div id="tree"></div>
+    <script>
+        function getTree() {
+          data = [
+              {{ macros.category_links(categoryTreeArray) }}
+          ];
+          return data;
+        }
+        $('#tree').treeview({
+            enableLinks: true,
+            data: getTree()
+        });
+    </script>
+{% endblock %}

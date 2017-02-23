@@ -29,9 +29,9 @@
         "sonata-project/intl-bundle": "2.2.x-dev",
         "jms/serializer-bundle": "~0.13",
         "presta/sitemap-bundle": "^1.4",
-        "twitter/bootstrap": "3.*",
         "components/jquery": "1.11.1",
-        "iakumai/sphinxsearch-bundle": "dev-master"
+        "iakumai/sphinxsearch-bundle": "dev-master",
+        "twbs/bootstrap": "^3.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

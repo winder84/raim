@@ -74,6 +74,7 @@ class ExternalCategoryAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
+            ->add('id')
             ->add('isActive', null, array(
                     'label'    => 'Вкл.',
                     'required' => false,

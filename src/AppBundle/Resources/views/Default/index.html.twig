@@ -9,9 +9,11 @@
 		<h2 class="shopTitle">Популярные бренды:</h2>
 		<ul class="vendorBlockUl">
 			{% for vendor in vendors %}
+				{% if vendor is not empty %}
 					<li>
 						<a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a>
 					</li>
+				{% endif %}
 			{% endfor %}
 		</ul>
 	</div>

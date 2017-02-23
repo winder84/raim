@@ -45,3 +45,11 @@ media:
 PrestaSitemapBundle:
     resource: "@PrestaSitemapBundle/Resources/config/routing.yml"
     prefix:   /
+
+sonata_admin_categoryTree:
+    pattern:  /admin/categoryTree
+    defaults: { _controller: AppBundle:CategoryTree:categoryTree }
+
+sonata_admin_exCategoryProducts:
+    pattern:  /admin/exCategoryProducts
+    defaults: { _controller: AppBundle:ExCategoryProducts:ExCategoryProducts }

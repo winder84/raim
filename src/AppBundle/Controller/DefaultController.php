@@ -212,7 +212,7 @@ class DefaultController extends Controller
         if ($parentCategory) {
             $internalParentCategory = $parentCategory->getInternalParentCategory();
         }
-        $childCategoriesIds = $this->getChildCategories($exCategory);
+        $childCategoriesIds = $this->getChildCategoryIds($exCategory);
         $childCategoriesIds[] = $exCategory->getId();
         $qb = $em->createQueryBuilder();
         $qb->select('Product')
@@ -442,40 +442,25 @@ class DefaultController extends Controller
     }
 
     /**
-     * @param Category|ExternalCategory $parentCategory
+     * @param Category $parentCategory
      * @return array
      */
-    private function getChildCategories($parentCategory)
+    private function getChildCategoryIds($parentCategory)
     {
-        $resultCategories = array();
-        $em = $this->getDoctrine()->getManager();
-        if ($parentCategory instanceof Category) {
-            $externalCategories = $parentCategory->getExternalCategories();
-            if ($externalCategories) {
-                /** @var ExternalCategory $externalCategory */
-                foreach ($externalCategories as $externalCategory) {
-                    $resultCategories[] = $externalCategory;
-                    $childExCategories = $this->getChildCategories($externalCategory);
-                    $resultCategories = array_merge($resultCategories, $childExCategories);
-                }
-            }
-        } elseif ($parentCategory instanceof ExternalCategory) {
-            $childExCategories = $em
-                ->getRepository('AppBundle:ExternalCategory')
-                ->findBy(array(
-                    'parentId' => $parentCategory->getExternalId(),
-                    'site' => $parentCategory->getSite(),
-                    'isActive' => 1,
-                ));
-            if ($childExCategories) {
-                foreach ($childExCategories as $childExCategory) {
-                    $resultCategories[] = $childExCategory;
-                    $childExCategories2[] = $this->getChildCategories($childExCategory);
-                    $resultCategories = array_merge($resultCategories, $childExCategories2);
-                }
+        $childExCategoryIds = array();
+        $childCategories = $parentCategory->getChildren();
+        $childExCategories = $parentCategory->getExternalCategories();
+        foreach ($childExCategories as $childExCategory) {
+            $childExCategoryIds[] = $childExCategory->getId();
+        }
+        /** @var Category $childCategory */
+        foreach ($childCategories as $childCategory) {
+            $childExCategories = $childCategory->getExternalCategories();
+            foreach ($childExCategories as $childExCategory) {
+                $childExCategoryIds[] = $childExCategory->getId();
             }
         }
-        return $resultCategories;
+        return $childExCategoryIds;
     }
 
     private function getMenuItems()
@@ -485,12 +470,14 @@ class DefaultController extends Controller
         $qb->select('Category')
             ->from('AppBundle:Category', 'Category')
             ->where('Category.isActive = 1')
+            ->andWhere('Category.parent is NULL')
             ->setMaxResults(20);
         $query = $qb->getQuery();
         $resultCategories = $query->getResult();
+        /** @var Category $resultCategory */
         foreach ($resultCategories as $resultCategory) {
             $count = 0;
-            $childCategories = $this->getChildCategories($resultCategory);
+            $childExCategoryIds = $this->getChildCategoryIds($resultCategory);
             $qb = $em->createQueryBuilder();
             $qb->select('exCategory.id, exCategory.name, count(Product.id) as cnt')
                 ->from('AppBundle:ExternalCategory', 'exCategory')
@@ -499,7 +486,7 @@ class DefaultController extends Controller
                 ->andWhere('exCategory.isActive = 1')
                 ->having('cnt > 0')
                 ->orderBy('cnt', 'DESC')
-                ->setParameter('childCategories', $childCategories);
+                ->setParameter('childCategories', $childExCategoryIds);
             $query = $qb->getQuery();
             $resultChildCategories = $query->getResult();
             foreach ($resultChildCategories as $resultChildCategory) {
@@ -515,13 +502,12 @@ class DefaultController extends Controller
             ->getRepository('AppBundle:Site')
             ->findAll();
         $qb = $em->createQueryBuilder();
-
         $qb->select('Vendor.alias, Vendor.name, count(p.id) as cnt')
             ->from('AppBundle:Vendor', 'Vendor')
             ->leftJoin('Vendor.products', 'p')
             ->where('Vendor.isActive = 1')
             ->having('cnt > 500')
-            ->groupBy('Vendor.alias')
+            ->groupBy('Vendor.id')
             ->orderBy('cnt', 'DESC')
             ->setMaxResults(15);
         $query = $qb->getQuery();
@@ -618,7 +604,7 @@ class DefaultController extends Controller
                         ));
                     if ($category) {
                         $qb->andWhere('Product.category IN (:childCategories)')
-                            ->setParameter('childCategories', $this->getChildCategories($category));
+                            ->setParameter('childCategories', $this->getChildCategoryIds($category));
                     } else {
                         throw $this->createNotFoundException('Alias does not parsed (category)');
                     }

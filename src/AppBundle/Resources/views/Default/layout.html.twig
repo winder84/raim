@@ -36,7 +36,9 @@
 								{% if menuItems is not empty %}
 									{% if menuItems.vendors is defined %}
 										{% for vendor in menuItems.vendors %}
-											<li><a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a></li>
+											{% if vendor is not empty %}
+												<li><a href="/filter/vendor+{{ vendor.alias }}">{{ vendor.name }}</a></li>
+											{% endif %}
 										{% endfor %}
 									{% endif %}
 								{% endif %}
