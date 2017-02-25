@@ -357,7 +357,7 @@ class DefaultController extends Controller
             ->findOneBy(array(
                 'alias' => $alias
             ));
-        $qb = $this->getQbByAlias($alias);
+        $qb = $this->getQbByAlias($alias)->groupBy('Product.id');
         $query = $qb->getQuery()
             ->setFirstResult($this->productsPerPage * ($page - 1))
             ->setMaxResults($this->productsPerPage);
