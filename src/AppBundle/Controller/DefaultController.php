@@ -185,7 +185,7 @@ class DefaultController extends Controller
             )
         );
     }
-//
+
 //    /**
 //     * @Route("/exCategory/{id}/{page}", name="ex_category_route")
 //     */
@@ -359,11 +359,10 @@ class DefaultController extends Controller
             ));
         $qb = $this->getQbByAlias($alias);
         $query = $qb->getQuery()
-            ->setFirstResult($this->productsPerPage * ($page - 1));
-        $products = $query->getResult();
-        $productsCount = count($products);
-        $query = $query->setMaxResults($this->chooseProductsCount);
-        $products = $query->getResult();
+            ->setFirstResult($this->productsPerPage * ($page - 1))
+            ->setMaxResults($this->productsPerPage);
+        $products = new Paginator($query, $fetchJoinCollection = true);
+        $productsCount = $products->count();
         $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
         $path = "/filter/{$alias}/";
         if ($productsCount <= $this->productsPerPage) {
