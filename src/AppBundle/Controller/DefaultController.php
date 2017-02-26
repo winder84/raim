@@ -185,84 +185,84 @@ class DefaultController extends Controller
             )
         );
     }
-
-    /**
-     * @Route("/exCategory/{id}/{page}", name="ex_category_route")
-     */
-    public function exCategoryAction($id, $page = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $exCategory = $em
-            ->getRepository('AppBundle:ExternalCategory')
-            ->findOneBy(array(
-                'id' => $id,
-                'isActive' => 1
-            ));
-        if (!$exCategory) {
-            throw $this->createNotFoundException();
-        }
-        $this->metaTags['metaTitle'] = 'Купить ' . mb_strtolower($exCategory->getName(), 'UTF-8') . ' с доставкой по России.';
-        $parentId = $exCategory->getParentId();
-        $parentCategory = $em
-            ->getRepository('AppBundle:ExternalCategory')
-            ->findOneBy(array(
-                'externalId' => $parentId,
-                'isActive' => 1
-            ));
-        if ($parentCategory) {
-            $internalParentCategory = $parentCategory->getInternalParentCategory();
-        }
-        $childCategoriesIds = $this->getChildCategoryIds($exCategory);
-        $childCategoriesIds[] = $exCategory->getId();
-        $qb = $em->createQueryBuilder();
-        $qb->select('Product')
-            ->from('AppBundle:Product', 'Product')
-            ->where('Product.category IN (:childCategoriesIds)')
-            ->andWhere('Product.isDelete = 0')
-            ->setParameter('childCategoriesIds', $childCategoriesIds);
-        $query = $qb->getQuery()
-            ->setFirstResult($this->productsPerPage * ($page - 1))
-            ->setMaxResults($this->productsPerPage);
-        $products = new Paginator($query, $fetchJoinCollection = true);
-
-        $productsCount = count($products);
-        $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
-        $path = "/exCategory/$id/";
-        if ($productsCount <= $this->productsPerPage) {
-            $paginatorData = null;
-        } else {
-            $paginatorData = $this->getPaginatorData($paginatorPagesCount, $page, 1, 5, $path);
-        }
-
-        $this->getMenuItems();
-        $returnArray = array(
-            'products' => $products,
-            'paginatorData' => $paginatorData,
-            'exCategory' => $exCategory,
-            'metaTags' => $this->metaTags
-        );
-        if (isset($internalParentCategory)) {
-            $media = $internalParentCategory->getMedia();
-            if ($media) {
-                $provider = $this->container->get($media->getProviderName());
-                $url = $provider->generatePublicUrl($media, 'reference');
-                $this->menuItems['slideUrl'] = $url;
-            }
-            if (!empty($internalParentCategory->getSeoDescription())) {
-                $this->menuItems['slideText'] = $internalParentCategory->getSeoDescription();
-            }
-            if (!empty($parentCategory)) {
-                $exCategories = $em
-                    ->getRepository('AppBundle:ExternalCategory')
-                    ->findBy(array('parentId' => $parentCategory->getExternalId()));
-                if ($exCategories) {
-                    $returnArray['exCategories'] = $exCategories;
-                }
-            }
-        }
-        $returnArray['menuItems'] = $this->menuItems;
-        return $this->render('AppBundle:Default:exCategory.html.twig', $returnArray);
-    }
+//
+//    /**
+//     * @Route("/exCategory/{id}/{page}", name="ex_category_route")
+//     */
+//    public function exCategoryAction($id, $page = 1)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $exCategory = $em
+//            ->getRepository('AppBundle:ExternalCategory')
+//            ->findOneBy(array(
+//                'id' => $id,
+//                'isActive' => 1
+//            ));
+//        if (!$exCategory) {
+//            throw $this->createNotFoundException();
+//        }
+//        $this->metaTags['metaTitle'] = 'Купить ' . mb_strtolower($exCategory->getName(), 'UTF-8') . ' с доставкой по России.';
+//        $parentId = $exCategory->getParentId();
+//        $parentCategory = $em
+//            ->getRepository('AppBundle:ExternalCategory')
+//            ->findOneBy(array(
+//                'externalId' => $parentId,
+//                'isActive' => 1
+//            ));
+//        if ($parentCategory) {
+//            $internalParentCategory = $parentCategory->getInternalParentCategory();
+//        }
+//        $childCategoriesIds = $this->getChildCategoryIds($exCategory);
+//        $childCategoriesIds[] = $exCategory->getId();
+//        $qb = $em->createQueryBuilder();
+//        $qb->select('Product')
+//            ->from('AppBundle:Product', 'Product')
+//            ->where('Product.category IN (:childCategoriesIds)')
+//            ->andWhere('Product.isDelete = 0')
+//            ->setParameter('childCategoriesIds', $childCategoriesIds);
+//        $query = $qb->getQuery()
+//            ->setFirstResult($this->productsPerPage * ($page - 1))
+//            ->setMaxResults($this->productsPerPage);
+//        $products = new Paginator($query, $fetchJoinCollection = true);
+//
+//        $productsCount = count($products);
+//        $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
+//        $path = "/exCategory/$id/";
+//        if ($productsCount <= $this->productsPerPage) {
+//            $paginatorData = null;
+//        } else {
+//            $paginatorData = $this->getPaginatorData($paginatorPagesCount, $page, 1, 5, $path);
+//        }
+//
+//        $this->getMenuItems();
+//        $returnArray = array(
+//            'products' => $products,
+//            'paginatorData' => $paginatorData,
+//            'exCategory' => $exCategory,
+//            'metaTags' => $this->metaTags
+//        );
+//        if (isset($internalParentCategory)) {
+//            $media = $internalParentCategory->getMedia();
+//            if ($media) {
+//                $provider = $this->container->get($media->getProviderName());
+//                $url = $provider->generatePublicUrl($media, 'reference');
+//                $this->menuItems['slideUrl'] = $url;
+//            }
+//            if (!empty($internalParentCategory->getSeoDescription())) {
+//                $this->menuItems['slideText'] = $internalParentCategory->getSeoDescription();
+//            }
+//            if (!empty($parentCategory)) {
+//                $exCategories = $em
+//                    ->getRepository('AppBundle:ExternalCategory')
+//                    ->findBy(array('parentId' => $parentCategory->getExternalId()));
+//                if ($exCategories) {
+//                    $returnArray['exCategories'] = $exCategories;
+//                }
+//            }
+//        }
+//        $returnArray['menuItems'] = $this->menuItems;
+//        return $this->render('AppBundle:Default:exCategory.html.twig', $returnArray);
+//    }
 
     /**
      * @Route("/product/detail/{alias}", name="product_detail_route")
@@ -359,10 +359,11 @@ class DefaultController extends Controller
             ));
         $qb = $this->getQbByAlias($alias);
         $query = $qb->getQuery()
-            ->setFirstResult($this->productsPerPage * ($page - 1))
-            ->setMaxResults($this->productsPerPage);
-        $products = new Paginator($query, $fetchJoinCollection = true);
-        $productsCount = $products->count();
+            ->setFirstResult($this->productsPerPage * ($page - 1));
+        $products = $query->getResult();
+        $productsCount = count($products);
+        $query = $query->setMaxResults($this->chooseProductsCount);
+        $products = $query->getResult();
         $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
         $path = "/filter/{$alias}/";
         if ($productsCount <= $this->productsPerPage) {
