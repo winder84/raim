@@ -359,12 +359,12 @@ class DefaultController extends Controller
             ));
         $qb = $this->getQbByAlias($alias);
         $query = $qb->getQuery();
-        $products = new Paginator($query);
-        $productsCount = $products->count();
-        $products
-            ->getQuery()
+        $allProducts = $query->getResult();
+        $productsCount = count($allProducts);
+        $products = $query
             ->setFirstResult($this->productsPerPage * ($page - 1))
-            ->setMaxResults($this->productsPerPage);
+            ->setMaxResults($this->productsPerPage)
+            ->getResult();
         $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
         $path = "/filter/{$alias}/";
         if ($productsCount <= $this->productsPerPage) {
