@@ -8,5 +8,5 @@ doctrine:
         entity_managers:
             default:
                 mappings:
-#                    SonataClassificationBundle: ~
+                    SonataClassificationBundle: ~
                     ApplicationSonataClassificationBundle: ~
