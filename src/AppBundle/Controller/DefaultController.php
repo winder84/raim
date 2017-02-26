@@ -362,7 +362,7 @@ class DefaultController extends Controller
             ->setFirstResult($this->productsPerPage * ($page - 1))
             ->setMaxResults($this->productsPerPage);
         $products = new Paginator($query, $fetchJoinCollection = true);
-        $productsCount = count($products);
+        $productsCount = $products->count();
         $paginatorPagesCount = ceil($productsCount / $this->productsPerPage);
         $path = "/filter/{$alias}/";
         if ($productsCount <= $this->productsPerPage) {
