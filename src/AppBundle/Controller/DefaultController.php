@@ -357,10 +357,20 @@ class DefaultController extends Controller
             ->findOneBy(array(
                 'alias' => $alias
             ));
-        $qb = $this->getQbByAlias($alias);
+        $qb = $em->createQueryBuilder();
+        $qb->select('count(Product.id) AS cnt')
+            ->from('AppBundle:Product', 'Product')
+            ->where('Product.isDelete = 0');
+        $qb = $this->getQbByAlias($alias, $qb);
+        $allProducts = $qb->getQuery()->getResult();
+        $productsCount = $allProducts[0]['cnt'];
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('Product')
+            ->from('AppBundle:Product', 'Product')
+            ->where('Product.isDelete = 0');
+        $qb = $this->getQbByAlias($alias, $qb);
         $query = $qb->getQuery();
-        $allProducts = $query->getResult();
-        $productsCount = count($allProducts);
         $products = $query
             ->setFirstResult($this->productsPerPage * ($page - 1))
             ->setMaxResults($this->productsPerPage)
@@ -573,7 +583,7 @@ class DefaultController extends Controller
         }
     }
 
-    public function getQbByAlias($alias)
+    public function getQbByAlias($alias, $qb)
     {
         $em = $this->getDoctrine()->getManager();
         $parseAliasLevelOne = explode('__', $alias);
@@ -591,10 +601,6 @@ class DefaultController extends Controller
         if (!$parseAliasLevelTwo) {
             throw $this->createNotFoundException('Alias does not parsed');
         }
-        $qb = $em->createQueryBuilder();
-        $qb->select('Product')
-            ->from('AppBundle:Product', 'Product')
-            ->where('Product.isDelete = 0');
         $valueIds = array();
         foreach ($parseAliasLevelTwo as $parseAliasItem) {
             switch ($parseAliasItem['name']) {
