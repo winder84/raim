@@ -21,12 +21,14 @@ class ExCategoryProductsController extends CoreController
             ->findOneBy(array('id' => $externalCategoryId));
         $externalCategoryProducts = $this->em
             ->getRepository('AppBundle:Product')
-            ->findBy(array('category' => $externalCategory), array(), 10);
+            ->findBy(array('category' => $externalCategory), array(), 14);
+        $productsCount = count($externalCategory->getProducts());
         return $this->render('AppBundle:Admin:external.category.products.html.twig', array(
             'base_template' => $this->getBaseTemplate(),
             'admin_pool' => $this->container->get('sonata.admin.pool'),
             'blocks' => $this->container->getParameter('sonata.admin.configuration.dashboard_blocks'),
             'externalCategoryProducts' => $externalCategoryProducts,
+            'productsCount' => $productsCount,
         ));
     }
 }

@@ -428,6 +428,9 @@ h3.shopTitle {
 	margin: 10px 0 10px 840px;
 }
 
+.adminButton {
+	display: inline-block;
+}
 
 /*--------  menu -----------------*/
 ul.dropdown li { position: relative; }

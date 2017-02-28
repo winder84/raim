@@ -3,13 +3,15 @@
 {% block title %}{{ 'title_dashboard'|trans({}, 'SonataAdminBundle') }}{% endblock%}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
-    <link rel="stylesheet" href="/bundles/app/css/main.css">
     <div class="row-fluid">
         <div class="span6">
             <a href="{{ url('sonata_admin_categoryTree') }}" class="btn btn-default">Дерево категорий</a>
         </div>
     </div>
     <br />
+    <br />
+    <p style="text-align: center;">Общее количество: {{ productsCount }} шт.</p>
+    <link rel="stylesheet" href="/bundles/app/css/main.css">
     {% if externalCategoryProducts is not empty %}
         <div>
             {{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': null, 'products': externalCategoryProducts }) }}
