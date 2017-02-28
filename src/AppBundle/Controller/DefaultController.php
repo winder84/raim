@@ -611,7 +611,7 @@ class DefaultController extends Controller
                             'alias' => $parseAliasItem['alias']
                         ));
                     if ($category) {
-                        $qb->andWhere('Product.category IN (:childCategories)')
+                        $qb->andWhere('Product.categoryId IN (:childCategories)')
                             ->setParameter('childCategories', $this->getChildCategoryIds($category));
                     } else {
                         throw $this->createNotFoundException('Alias does not parsed (category)');
