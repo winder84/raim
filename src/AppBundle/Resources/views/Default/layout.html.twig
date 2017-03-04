@@ -79,18 +79,35 @@
 	<div class="breadcrumbs">
 		{% if breadcrumbsCategories is defined %}
 			<ul>
+				<li><a href="/">Главная</a></li> \
 				{% for breadcrumbsCategory in breadcrumbsCategories %}
 					<li>
-						{% if breadcrumbsCategory.alias is defined %}
-							<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}
-						{% else %}
-							<a href="/exCategory/{{ breadcrumbsCategory.id }}">{{ breadcrumbsCategory.name }}</a> {% if not loop.last %}\{% endif %}
+						<a href="/filter/category+{{ breadcrumbsCategory.alias }}">{{ breadcrumbsCategory.name }}</a>
+						{% if not loop.last %}
+							\
 						{% endif %}
 					</li>
 				{% endfor %}
 			</ul>
 		{% endif %}
 	</div>
+	{% if categoryChildren is defined %}
+		<div class="childCategories">
+			<hr />
+			{#<h2 class="shopTitle" style="font-size: 14px; padding: 0; margin: 5px 0 0 0;">Категории:</h2>#}
+			<ul style="margin: 5px 0; padding: 0; text-align: center;">
+				{% for categoryChild in categoryChildren %}
+					<li>
+						<a href="/filter/category+{{ categoryChild.alias }}">{{ categoryChild.name }}</a>
+						{% if not loop.last %}
+							|
+						{% endif %}
+					</li>
+				{% endfor %}
+			</ul>
+			<hr />
+		</div>
+	{% endif %}
 	<div class="content">
 		{% block content %}
 

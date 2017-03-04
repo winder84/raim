@@ -9,7 +9,7 @@
 				<div class="itemPicture">
 					<noindex>
 						<a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}" alt="{{ product.name|raw }} {{ product.model|raw }}">
-							<img src="{% if product.pictures.0 is not defined %}{{ asset('bundles/app/images/nopic.jpg') }}{% else %}{{ product.pictures.0|replace({'http:': "https:"}) }}{% endif %}">
+							<img src="{% if product.pictures.0 is not defined %}{{ asset('bundles/app/images/nopic.jpg') }}{% else %}{{ product.pictures.0|replace({'http:': ""}) }}{% endif %}">
 						</a>
 					</noindex>
 				</div>

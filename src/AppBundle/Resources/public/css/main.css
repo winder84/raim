@@ -388,28 +388,28 @@ h3.shopTitle {
 	background: url("/bundles/app/images/404.png") no-repeat;
 }
 
-.breadcrumbs {
+.breadcrumbs, .childCategories {
 	background: #efefef;
+	padding: 0 0 5px 0;
 }
 
-.breadcrumbs ul {
+.breadcrumbs ul, .childCategories ul {
 	margin: 0;
-	padding: 0;
 	list-style: none;
 	padding: 10px 0 0 75px;
 }
 
-.breadcrumbs li {
+.breadcrumbs li, .childCategories li {
 	display: inline-block;
 	color: #666;
 }
 
-.breadcrumbs li a {
+.breadcrumbs li a, .childCategories li a {
 	text-decoration: none;
 	color: #666;
 }
 
-.breadcrumbs li a:hover {
+.breadcrumbs li a:hover, .childCategories li a:hover {
 	text-decoration: underline;
 }
 
@@ -430,6 +430,13 @@ h3.shopTitle {
 
 .adminButton {
 	display: inline-block;
+}
+
+body hr {
+	padding: 0;
+	margin: 0;
+	background-color: #999;
+	height: 1px;
 }
 
 /*--------  menu -----------------*/

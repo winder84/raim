@@ -352,6 +352,21 @@ class DefaultController extends Controller
         if ($alias) {
             $alias = str_replace(' ', '+', $alias);
         }
+        $parseAliasLevelOne = explode('__', $alias);
+        $parseAliasLevelTwo = array();
+        if (!$parseAliasLevelOne) {
+            throw $this->createNotFoundException('Alias does not found');
+        }
+        foreach ($parseAliasLevelOne as $parseAliasItem) {
+            list($key, $value) = explode('+', $parseAliasItem);
+            $parseAliasLevelTwo[] = array(
+                'name' => $key,
+                'alias' => $value,
+            );
+        }
+        if (!$parseAliasLevelTwo) {
+            throw $this->createNotFoundException('Alias does not parsed');
+        }
         $filterAlias = $em
             ->getRepository('AppBundle:FilterAlias')
             ->findOneBy(array(
@@ -361,7 +376,7 @@ class DefaultController extends Controller
         $qb->select('count(Product.id) AS cnt')
             ->from('AppBundle:Product', 'Product')
             ->where('Product.isDelete = 0');
-        $qb = $this->getQbByAlias($alias, $qb);
+        $qb = $this->getQbByAlias($parseAliasLevelTwo, $qb);
         $allProducts = $qb->getQuery()->getResult();
         $productsCount = $allProducts[0]['cnt'];
 
@@ -369,7 +384,7 @@ class DefaultController extends Controller
         $qb->select('Product')
             ->from('AppBundle:Product', 'Product')
             ->where('Product.isDelete = 0');
-        $qb = $this->getQbByAlias($alias, $qb);
+        $qb = $this->getQbByAlias($parseAliasLevelTwo, $qb);
         $query = $qb->getQuery();
         $products = $query
             ->setFirstResult($this->productsPerPage * ($page - 1))
@@ -387,12 +402,34 @@ class DefaultController extends Controller
             $this->metaTags['metaTitle'] = 'Купить ' . $filterAlias->getAliasText() . ' со скидкой';;
             $this->metaTags['metaDescription'] = 'купить ' . $filterAlias->getAliasText() . ' с доставкой';
         }
+        $breadcrumbsCategories = array();
+        $categoryChildren = null;
+        foreach ($parseAliasLevelTwo as $parseItem) {
+            if ($parseItem['name'] == 'category') {
+                /** @var Category $category */
+                $category = $em
+                    ->getRepository('AppBundle:Category')
+                    ->findOneBy(array(
+                        'alias' => $parseItem['alias']
+                    ));
+                $this->getBreadcrumbs($category, 'category');
+                $breadcrumbsCategories = array_reverse($this->breadcrumbsCategories);
+                $categoryChildren = $category->getChildren();
+                break;
+            }
+        }
         $returnArray = array(
             'metaTags' => $this->metaTags,
             'paginatorData' => $paginatorData,
             'products' => $products,
             'filterAlias' => $filterAlias,
         );
+        if ($breadcrumbsCategories) {
+            $returnArray['breadcrumbsCategories'] = $breadcrumbsCategories;
+        }
+        if ($categoryChildren && $categoryChildren->count() > 0) {
+            $returnArray['categoryChildren'] = $categoryChildren;
+        }
         $returnArray['menuItems'] = $this->menuItems;
         return $this->render('AppBundle:Default:filter.html.twig', $returnArray);
     }
@@ -563,44 +600,29 @@ class DefaultController extends Controller
                 break;
             case 'category':
                 if ($item) {
-                    $em = $this->getDoctrine()->getManager();
-                    /** @var ExternalCategory $itemParent */
-                    $itemParent = $em
-                        ->getRepository('AppBundle:ExternalCategory')
-                        ->findOneBy(array(
-                            'externalId' => $item->getParentId(),
-                            'site' => $item->getSite(),
-                            'isActive' => 1,
-                        ));
+                    if ($item instanceof ExternalCategory) {
+                        $item = $item->getInternalParentCategory();
+                    }
+                    if (!in_array($item, $this->breadcrumbsCategories)) {
+                        $this->breadcrumbsCategories[] = $item;
+                    }
+                    $itemParent = $item->getParent();
                     if ($itemParent) {
-                        $internalCategory = $itemParent->getInternalParentCategory();
-                        if ($internalCategory) {
-                            $this->breadcrumbsCategories[] = $internalCategory;
-                            $this->getBreadcrumbs($itemParent, 'category');
-                        }
+                        $this->breadcrumbsCategories[] = $itemParent;
+                        $this->getBreadcrumbs($itemParent, 'category');
                     }
                 }
         }
     }
 
-    public function getQbByAlias($alias, $qb)
+    /**
+     * @param $parseAliasLevelTwo
+     * @param $qb
+     * @return mixed
+     */
+    public function getQbByAlias($parseAliasLevelTwo, $qb)
     {
         $em = $this->getDoctrine()->getManager();
-        $parseAliasLevelOne = explode('__', $alias);
-        $parseAliasLevelTwo = array();
-        if (!$parseAliasLevelOne) {
-            throw $this->createNotFoundException('Alias does not found');
-        }
-        foreach ($parseAliasLevelOne as $parseAliasItem) {
-            list($key, $value) = explode('+', $parseAliasItem);
-            $parseAliasLevelTwo[] = array(
-                'name' => $key,
-                'alias' => $value,
-            );
-        }
-        if (!$parseAliasLevelTwo) {
-            throw $this->createNotFoundException('Alias does not parsed');
-        }
         $valueIds = array();
         foreach ($parseAliasLevelTwo as $parseAliasItem) {
             switch ($parseAliasItem['name']) {
