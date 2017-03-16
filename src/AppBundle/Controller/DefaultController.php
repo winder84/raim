@@ -415,6 +415,10 @@ class DefaultController extends Controller
                 $this->getBreadcrumbs($category, 'category');
                 $breadcrumbsCategories = array_reverse($this->breadcrumbsCategories);
                 $categoryChildren = $category->getChildren();
+                if (!$filterAlias) {
+                    $this->metaTags['metaTitle'] = 'Купить ' . $category->getName() . ' со скидкой';;
+                    $this->metaTags['metaDescription'] = 'купить ' . $category->getName() . ' с доставкой';
+                }
                 break;
             }
         }
