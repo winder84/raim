@@ -236,7 +236,7 @@ h2.categoryH2 {
 	-moz-transition: all 1s ease-out;
 	-o-transition: all 1s ease-out;
 	-webkit-transition: all 1s ease-out;
-	min-height: 347px;
+	height: 347px;
 }
 
 .productListItem .itemPicture img {
