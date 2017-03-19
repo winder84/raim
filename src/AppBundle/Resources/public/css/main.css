@@ -1,3 +1,10 @@
+@font-face {
+	font-family: "AdineKirnberg";
+	font-style: normal;
+	font-weight: normal;
+	src: url("../fonts/AdineKirnberg.ttf");
+}
+
 body {
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 	margin: 0;
@@ -89,10 +96,12 @@ body {
 }
 
 .middleBlockText {
-	color: #ccc;
-	padding: 150px 0 0 130px;
-	font-size: 28px;
+	color: #fff;
+	text-shadow: 1px 1px 1px #214e4f;
+	padding: 90px 0 0 285px;
+	font-size: 100px;
 	position: absolute;
+	font-family: AdineKirnberg;
 }
 
 .productListBlock {
@@ -144,7 +153,7 @@ h2.categoryH2 {
 }
 
 .productListItem {
-	width: 200px;
+	width: 260px;
 	background-color: #fff;
 	text-align: center;
 	font-family: "Droid Sans", sans-serif;
@@ -224,45 +233,82 @@ h2.categoryH2 {
 }
 
 .productListItem .itemPicture {
-	height: 180px;
-	margin: 5px 0;
+	-moz-transition: all 1s ease-out;
+	-o-transition: all 1s ease-out;
+	-webkit-transition: all 1s ease-out;
+	min-height: 347px;
 }
 
 .productListItem .itemPicture img {
-	max-width: 220px;
-	height: 180px;
+	width: 260px;
+}
+
+.productListItem .itemPicture:hover{
+	-webkit-transform: scale(0.95);
+	-moz-transform: scale(0.95);
+	-o-transform: scale(0.95);
+	cursor: pointer;
 }
 
 .productListItem .itemModel {
 	font-size: 12px;
 	color: #6f6f6f;
 	padding: 10px 0 0 0;
+	overflow: hidden;
+	height: 27px;
 }
 
 .productListItem .itemPrice {
 	font-size: 14px;
-	color: orange;
-	padding: 0 0 10px 0;
+	color: #4AB2D3;
+	padding: 0 0 15px 0;
+	font-weight: bold;
+}
+
+.oldPrice {
+	text-decoration: line-through;
+	color: red;
+}
+
+.saleSpan {
+	position: absolute;
+	margin: -10px 0 0 85px;
+	z-index: 10;
+}
+
+.saleSpan img {
+	width: 50px;
 }
 
 .productListItem .itemLink {
-	padding: 0 0 10px 0;
+	padding: 0 10px 5px 0;
+	text-align: right;
 }
 
 .productListItem .itemLink a {
 	font-size: 14px;
-	color: #3a3a3a;
+	color: #6f6f6f;
 	text-decoration: none;
 }
 
 .productListItem .itemLink a:hover, .vendorBlockUl a:hover {
 	color: #3a3a3a;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.infoWrapper {
+	height: 90px;
+	width: 100%;
+	margin: 0;
+	background: white;
+	position: relative;
 }
 
 .footerBlock {
 	width: 100%;
 	height: 50px;
-	background-color: #3a3a3a;
+	background-color: #296466;
 }
 
 .siteBlockUl, .vendorBlockUl {
@@ -356,7 +402,7 @@ h3.shopTitle {
 
 .paginator ul li {
 	display: inline-block;
-	background-color: #3a3a3a;
+	background-color: #388687;
 }
 
 .paginator ul li a {
@@ -368,12 +414,12 @@ h3.shopTitle {
 }
 
 .paginator ul li a:hover {
-	background-color: #161616;
+	background-color: #4ab2b3;
 	color: #FFF;
 }
 
 .paginator ul li a.active {
-	background-color: #161616;
+	background-color: #214e4f;
 	color: #FFF;
 }
 
@@ -411,6 +457,7 @@ h3.shopTitle {
 
 .breadcrumbs li a:hover, .childCategories li a:hover {
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 .flexslider ul li img {

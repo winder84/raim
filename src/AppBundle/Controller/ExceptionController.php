@@ -52,8 +52,8 @@ class ExceptionController extends Controller
         foreach ($resultVendors as $resultVendor) {
             $this->menuItems['vendors'][] = $resultVendor;
         }
-        $this->menuItems['slideUrl'] = '/bundles/app/images/slBg.png';
-        $this->menuItems['slideText'] = 'Современная одежда для Вашей семьи.';
+        $this->menuItems['slideUrl'] = '/bundles/app/images/slBg1.png';
+        $this->menuItems['slideText'] = 'Современная одежда для Вашей семьи';
     }
 
     private function getMetaItems()

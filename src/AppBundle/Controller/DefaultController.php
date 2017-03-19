@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\ExternalCategory;
 use AppBundle\Entity\FilterAlias;
+use AppBundle\Entity\Product;
 use AppBundle\Entity\Stat;
 use AppBundle\Entity\Vendor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ class DefaultController extends Controller
     private $metaTags = array();
     private $productsPerPage = 20;
     private $breadcrumbsCategories = array();
-    private $chooseProductsCount = 15;
+    private $chooseProductsCount = 12;
 
     public function __construct()
     {
@@ -74,6 +75,7 @@ class DefaultController extends Controller
             $moreProducts = $query->getResult();
             $products = array_merge($products, $moreProducts);
         }
+        /** @var Product $product */
         foreach ($products as $product) {
             $resultProducts[] = array(
                 'name' => $product->getName(),
@@ -83,6 +85,7 @@ class DefaultController extends Controller
                 'url' => $product->getUrl(),
                 'price' => $product->getPrice(),
                 'alias' => $product->getAlias(),
+                'oldPrice' => $product->getOldPrice(),
             );
         }
 
@@ -568,8 +571,8 @@ class DefaultController extends Controller
         foreach ($resultVendors as $resultVendor) {
             $this->menuItems['vendors'][] = $resultVendor;
         }
-        $this->menuItems['slideUrl'] = '/bundles/app/images/slBg.png';
-        $this->menuItems['slideText'] = 'Современная одежда для Вашей семьи.';
+        $this->menuItems['slideUrl'] = '/bundles/app/images/slBg1.png';
+        $this->menuItems['slideText'] = 'Современная одежда для Вашей семьи';
     }
 
     private function getMetaItems()
