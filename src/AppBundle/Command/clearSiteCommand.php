@@ -75,6 +75,8 @@ class clearSiteCommand extends ContainerAwareCommand
             ->setParameter('dateTimeToDelete', $dateTimeToDelete);
         $qb->getQuery()->execute();
         $this->outputWriteLn('Offers deleted');
+        $this->em->flush();
+        $this->em->clear();
 
         $qb = $this->em->createQueryBuilder();
         $qb->update('AppBundle:Product', 'Product')
@@ -87,6 +89,8 @@ class clearSiteCommand extends ContainerAwareCommand
             ->setParameter('newVersion', $siteVersion);
         $qb->getQuery()->execute();
         $this->outputWriteLn('Offers updated');
+        $this->em->flush();
+        $this->em->clear();
 
         $qb = $this->em->createQueryBuilder();
         $qb->delete('AppBundle:ExternalCategory', 'ExCategory')
@@ -96,6 +100,8 @@ class clearSiteCommand extends ContainerAwareCommand
             ->setParameter('newVersion', $siteVersion);
         $qb->getQuery()->execute();
         $this->outputWriteLn('ExCategories deleted');
+        $this->em->flush();
+        $this->em->clear();
 
         $qb = $this->em->createQueryBuilder();
         $qb->delete('AppBundle:Vendor', 'Vendor')
@@ -105,5 +111,7 @@ class clearSiteCommand extends ContainerAwareCommand
             ->setParameter('newVersion', $siteVersion);
         $qb->getQuery()->execute();
         $this->outputWriteLn('Vendors deleted');
+        $this->em->flush();
+        $this->em->clear();
     }
 }
