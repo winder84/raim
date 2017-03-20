@@ -115,6 +115,9 @@ doctrine:
                     FOSUserBundle: ~
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
+                dql:
+                    numeric_functions:
+                      round: AppBundle\DQL\Round
 
 # Swiftmailer Configuration
 swiftmailer:

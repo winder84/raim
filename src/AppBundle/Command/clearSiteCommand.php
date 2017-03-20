@@ -61,83 +61,49 @@ class clearSiteCommand extends ContainerAwareCommand
 
     private function clearSite($site)
     {
+        $siteVersion = round($site->getVersion(), 2);
         $qb = $this->em->createQueryBuilder();
-        $qb->select('Product')
-            ->from('AppBundle:Product', 'Product')
-            ->where('Product.site = :site')
-            ->andWhere('Product.version != :newVersion')
-            ->setParameter('site', $site)
-            ->setParameter('newVersion', $site->getVersion());
-        $query = $qb->getQuery();
-        $productsToDelete = $query->getResult();
         $nowDateTime = new \DateTime();
-        $i = 0;
-        foreach ($productsToDelete as $productToDelete) {
-            if ($productToDelete->getVersion() == $site->getVersion()) {
-                continue;
-            }
-            $productUpdated = $productToDelete->getUpdated();
-            if ($productToDelete->getIsDelete()) {
-                if ($nowDateTime->diff($productUpdated)->days >= 31) {
-                    $deletedProductsArray[] = $productToDelete;
-//                    $this->em->remove($productToDelete);
-                }
-            } else {
-//                $productToDelete->setIsDelete(true);
-//                $productToDelete->setUpdated(new \DateTime());
-                $productsToDeleteArray[] = $productToDelete;
-            }
-            $i++;
-            if ($i %100 == 0) {
-                $this->em->flush();
-                $this->outputWriteLn('Offers $i - ' . $i);
-            }
-        }
-        $this->em->flush();
-        $this->em->clear('AppBundle\Entity\Product');
-        if (!empty($productsToDeleteArray)) {
-            $this->outputWriteLn('Offers to delete - ' . count($productsToDeleteArray));
-        }
-        if (!empty($deletedProductsArray)) {
-            $this->outputWriteLn('Deleted offers - ' . count($deletedProductsArray));
-        }
+        $dateTimeToDelete = $nowDateTime->sub(new \DateInterval('P30D'))->format("Y-m-d H:i:s");
+        $qb->delete('AppBundle:Product', 'Product')
+            ->where('Product.site = :site')
+            ->andWhere('round(Product.version, 2) != :newVersion')
+            ->andWhere('Product.updated < :dateTimeToDelete')
+            ->andWhere('Product.isDelete = 1')
+            ->setParameter('site', $site)
+            ->setParameter('newVersion', $siteVersion)
+            ->setParameter('dateTimeToDelete', $dateTimeToDelete);
+        $qb->getQuery()->execute();
+        $this->outputWriteLn('Offers deleted');
 
         $qb = $this->em->createQueryBuilder();
-        $qb->select('ExCategory')
-            ->from('AppBundle:ExternalCategory', 'ExCategory')
+        $qb->update('AppBundle:Product', 'Product')
+            ->set('Product.isDelete', '1')
+            ->set('Product.updated', ':nowDateTime')
+            ->where('Product.site = :site')
+            ->andWhere('round(Product.version, 2) != :newVersion')
+            ->setParameter('site', $site)
+            ->setParameter('nowDateTime', $nowDateTime->format("Y-m-d H:i:s"))
+            ->setParameter('newVersion', $siteVersion);
+        $qb->getQuery()->execute();
+        $this->outputWriteLn('Offers updated');
+
+        $qb = $this->em->createQueryBuilder();
+        $qb->delete('AppBundle:ExternalCategory', 'ExCategory')
             ->where('ExCategory.site = :site')
-            ->andWhere('ExCategory.version != :newVersion')
+            ->andWhere('round(ExCategory.version, 2) != :newVersion')
             ->setParameter('site', $site)
-            ->setParameter('newVersion', $site->getVersion());
-        $query = $qb->getQuery();
-        $exCategoriesToDelete = $query->getResult();
-        foreach ($exCategoriesToDelete as $exCategoryToDelete) {
-            $exCategoryToDeleteArray[] = $exCategoryToDelete;
-            $this->em->remove($exCategoryToDelete);
-        }
-        $this->em->flush();
-        $this->em->clear('AppBundle\Entity\ExternalCategory');
-        if (!empty($exCategoryToDeleteArray)) {
-            $this->outputWriteLn('Deleted categories - ' . count($exCategoryToDeleteArray));
-        }
+            ->setParameter('newVersion', $siteVersion);
+        $qb->getQuery()->execute();
+        $this->outputWriteLn('ExCategories deleted');
 
         $qb = $this->em->createQueryBuilder();
-        $qb->select('Vendor')
-            ->from('AppBundle:Vendor', 'Vendor')
+        $qb->delete('AppBundle:Vendor', 'Vendor')
             ->where('Vendor.site = :site')
-            ->andWhere('Vendor.version != :newVersion')
+            ->andWhere('round(Vendor.version, 2) != :newVersion')
             ->setParameter('site', $site)
-            ->setParameter('newVersion', $site->getVersion());
-        $query = $qb->getQuery();
-        $vendorsToDelete = $query->getResult();
-        foreach ($vendorsToDelete as $vendorToDelete) {
-            $vendorsToDeleteArray[] = $vendorToDelete;
-            $this->em->remove($vendorToDelete);
-        }
-        $this->em->flush();
-        $this->em->clear('AppBundle\Entity\Vendor');
-        if (!empty($vendorsToDeleteArray)) {
-            $this->outputWriteLn('Deleted vendors - ' . count($vendorsToDeleteArray));
-        }
+            ->setParameter('newVersion', $siteVersion);
+        $qb->getQuery()->execute();
+        $this->outputWriteLn('Vendors deleted');
     }
 }

@@ -5,7 +5,7 @@
     <ul class="productListUl">
         {% set isSale = 0 %}
         {% for product in products %}
-            {% if (product.oldPrice - product.price) > (product.price / 100 * 20) %}
+            {% if (product.oldPrice - product.price) > (product.oldPrice / 100 * 20) %}
                 {% set isSale = 1 %}
             {% endif %}
             <li class="productListItem">
