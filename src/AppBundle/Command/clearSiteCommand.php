@@ -84,6 +84,7 @@ class clearSiteCommand extends ContainerAwareCommand
             ->set('Product.updated', ':nowDateTime')
             ->where('Product.site = :site')
             ->andWhere('round(Product.version, 2) != :newVersion')
+            ->andWhere('Product.isDelete = 0')
             ->setParameter('site', $site)
             ->setParameter('nowDateTime', $nowDateTime->format("Y-m-d H:i:s"))
             ->setParameter('newVersion', $siteVersion);
