@@ -10,13 +10,13 @@ class NotActiveCategoriesController extends CoreController
 {
     private $em;
 
-    public function emptyCategoriesAction(Request $request)
+    public function NotActiveCategoriesAction(Request $request)
     {
         $this->em = $this->getDoctrine()->getManager();
         $categories = $this->em
             ->getRepository('AppBundle:Category')
             ->findBy(array(
-                'isActive' => 1
+                'isActive' => 0
             ));
         $resultCategories = array();
         $defaultController = new DefaultController();
@@ -29,7 +29,7 @@ class NotActiveCategoriesController extends CoreController
                 ->leftJoin('exCategory.products', 'Product')
                 ->where('exCategory IN (:childCategories)')
                 ->andWhere('exCategory.isActive = 1')
-                ->having('cnt = 0')
+                ->having('cnt > 0')
                 ->orderBy('cnt', 'DESC')
                 ->setParameter('childCategories', $childExCategoryIds);
             $query = $qb->getQuery();
@@ -38,7 +38,7 @@ class NotActiveCategoriesController extends CoreController
                 $resultCategories[] = $category;
             }
         }
-        return $this->render('AppBundle:Admin:empty.categories.html.twig', array(
+        return $this->render('AppBundle:Admin:not.active.categories.html.twig', array(
             'base_template' => $this->getBaseTemplate(),
             'admin_pool' => $this->container->get('sonata.admin.pool'),
             'blocks' => $this->container->getParameter('sonata.admin.configuration.dashboard_blocks'),

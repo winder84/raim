@@ -16,7 +16,9 @@ class CategoryTreeController extends CoreController
         $this->em = $this->getDoctrine()->getManager();
         $categories = $this->em
             ->getRepository('AppBundle:Category')
-            ->findAll();
+            ->findBy(array(
+                'isActive' => 1,
+            ));
         /** @var Category $category */
         foreach ($categories as $category) {
             if (!$category->getParent()) {

@@ -60,4 +60,4 @@ sonata_admin_emptyCategories:
 
 sonata_admin_notActiveCategories:
     pattern:  /admin/notActiveCategories
-    defaults: { _controller: AppBundle:EmptyCategories:EmptyCategories }
+    defaults: { _controller: AppBundle:NotActiveCategories:NotActiveCategories }
