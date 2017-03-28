@@ -306,7 +306,7 @@ class DefaultController extends Controller
             );
         }
         foreach ($categoryProducts as $categoryProduct) {
-            if (count($likeProducts) < 5) {
+            if (count($likeProducts) < 4) {
                 if ($categoryProduct->getId() != $product->getId() && !$categoryProduct->getIsDelete()) {
                     $likeProducts[] = $categoryProduct;
                 }
