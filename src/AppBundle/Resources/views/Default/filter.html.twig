@@ -3,11 +3,11 @@
 {% block content %}
 	<div class="shopBlock">
 		{{ include('AppBundle:Default:products.block.html.twig', { 'paginatorData': paginatorData, 'products': products }) }}
-		{% if filterAlias.description is defined %}
+		{% if filterAlias.description %}
 			<div style="margin: 0 auto; width: 800px;">
 				{{ filterAlias.description|raw }}
 			</div>
-		{% elseif filterAlias %}
+		{% elseif filterAlias.aliasText is defined %}
 			<h1 class="shopTitle">{{ filterAlias.aliasText|capitalize }}</h1>
 		{%  endif %}
 	</div>
