@@ -1,0 +1,11 @@
+{% extends base_template %}
+
+{% block title %}{{ 'title_dashboard'|trans({}, 'SonataAdminBundle') }}{% endblock%}
+{% block breadcrumb %}{% endblock %}
+{% block content %}
+    {{ include('AppBundle:Admin:menu.block.html.twig') }}
+    {% for resultCategory in resultCategories %}
+        <br /><br />
+        {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
+    {% endfor %}
+{% endblock %}

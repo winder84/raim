@@ -501,7 +501,7 @@ class DefaultController extends Controller
      * @param Category $parentCategory
      * @return array
      */
-    private function getChildCategoryIds($parentCategory)
+    public function getChildCategoryIds($parentCategory)
     {
         $childExCategoryIds = array();
         $childCategories = $parentCategory->getChildren();

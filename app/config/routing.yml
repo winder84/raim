@@ -53,3 +53,11 @@ sonata_admin_categoryTree:
 sonata_admin_exCategoryProducts:
     pattern:  /admin/exCategoryProducts
     defaults: { _controller: AppBundle:ExCategoryProducts:ExCategoryProducts }
+
+sonata_admin_emptyCategories:
+    pattern:  /admin/emptyCategories
+    defaults: { _controller: AppBundle:EmptyCategories:EmptyCategories }
+
+sonata_admin_notActiveCategories:
+    pattern:  /admin/notActiveCategories
+    defaults: { _controller: AppBundle:EmptyCategories:EmptyCategories }

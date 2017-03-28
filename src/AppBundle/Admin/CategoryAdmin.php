@@ -17,6 +17,11 @@ class CategoryAdmin extends Admin
     {
         $datagridMapper
             ->add('id')
+            ->add('isActive', null, array(
+                    'label'    => 'Вкл.',
+                    'required' => false,
+                )
+            )
             ->add('name', null, array('label' => 'Наименование'))
             ->add('description', null, array('label' => 'Описание'))
             ->add('seoDescription', null, array('label' => 'SEO описание'))

@@ -3,11 +3,7 @@
 {% block title %}{{ 'title_dashboard'|trans({}, 'SonataAdminBundle') }}{% endblock%}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
-    <div class="row-fluid">
-        <div class="span6">
-            <a href="{{ url('sonata_admin_categoryTree') }}" class="btn btn-default">Дерево категорий</a>
-        </div>
-    </div>
+    {{ include('AppBundle:Admin:menu.block.html.twig') }}
     {#<br/>#}
     {#{{ sonata_block_render_event('sonata.admin.dashboard.top', { 'admin_pool': admin_pool }) }}#}
 

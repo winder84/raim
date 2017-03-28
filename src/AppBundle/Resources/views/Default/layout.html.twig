@@ -97,12 +97,14 @@
 			{#<h2 class="shopTitle" style="font-size: 14px; padding: 0; margin: 5px 0 0 0;">Категории:</h2>#}
 			<ul style="margin: 5px 0; padding: 0; text-align: center;">
 				{% for categoryChild in categoryChildren %}
-					<li>
-						<a href="/filter/category+{{ categoryChild.alias }}">{{ categoryChild.name }}</a>
-						{% if not loop.last %}
-							|
-						{% endif %}
-					</li>
+					{% if categoryChild.isActive %}
+						<li>
+							<a href="/filter/category+{{ categoryChild.alias }}">{{ categoryChild.name }}</a>
+							{% if not loop.last %}
+								|
+							{% endif %}
+						</li>
+                    {% endif %}
 				{% endfor %}
 			</ul>
 			<hr />
