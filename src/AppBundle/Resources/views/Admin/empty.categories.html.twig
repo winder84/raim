@@ -4,7 +4,7 @@
 {% block breadcrumb %}{% endblock %}
 {% block content %}
     {{ include('AppBundle:Admin:menu.block.html.twig') }}
-    <form name="disableAllEmpty" method="post" action="/admin/emptyCategories" style="display: inline-block; margin-left: 10px;">
+    <form name="disableAllEmpty" method="post" action="/admin/emptyCategories" style="margin: 10px;">
         <div class="row-fluid">
             <div class="span6">
                 <input type="hidden" name="disableAll" value="1">
@@ -12,7 +12,7 @@
             </div>
         </div>
         {% for resultCategory in resultCategories %}
-            <br /><br />
+            <br />
             {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
             <input type="hidden" name="categoriesToDisable[{{ resultCategory.id }}]" value="{{ resultCategory.id }}">
         {% endfor %}

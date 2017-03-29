@@ -29,6 +29,7 @@ class ExCategoryProductsController extends CoreController
             'blocks' => $this->container->getParameter('sonata.admin.configuration.dashboard_blocks'),
             'externalCategoryProducts' => $externalCategoryProducts,
             'productsCount' => $productsCount,
+            'externalCategory' => $externalCategory,
         ));
     }
 }

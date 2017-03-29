@@ -3,9 +3,10 @@
 {% block title %}{{ 'title_dashboard'|trans({}, 'SonataAdminBundle') }}{% endblock%}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
-    <div class="row-fluid">
+    {{ include('AppBundle:Admin:menu.block.html.twig') }}
+    <div class="row-fluid" style="display: inline-block;">
         <div class="span6">
-            <a href="{{ url('sonata_admin_categoryTree') }}" class="btn btn-default">Дерево категорий</a>
+            <a href="/admin/app/externalcategory/{{ externalCategory.id }}/edit" class="btn btn-warning">Редактировать эту категорию</a>
         </div>
     </div>
     <br />
