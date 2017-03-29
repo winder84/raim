@@ -4,11 +4,11 @@
 {% block breadcrumb %}{% endblock %}
 {% block content %}
     {{ include('AppBundle:Admin:menu.block.html.twig') }}
-    <form name="disableAllEmpty" method="post" action="/admin/emptyCategories">
-        <div class="row-fluid" style="display: inline-block; margin-left: 10px;">
+    <form name="disableAllEmpty" method="post" action="/admin/emptyCategories" style="display: inline-block; margin-left: 10px;">
+        <div class="row-fluid">
             <div class="span6">
                 <input type="hidden" name="disableAll" value="1">
-                <input type="submit" class="btn btn-info" value="Отключить все пустые категории" />
+                <input type="submit" class="btn btn-danger" value="Отключить все пустые категории" />
             </div>
         </div>
         {% for resultCategory in resultCategories %}
