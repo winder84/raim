@@ -13,6 +13,21 @@ class EmptyCategoriesController extends CoreController
     public function emptyCategoriesAction(Request $request)
     {
         $this->em = $this->getDoctrine()->getManager();
+        $isDisableAll = $request->request->get('disableAll');
+        $categoriesToDisable = $request->request->get('categoriesToDisable');
+        if ($isDisableAll && $categoriesToDisable) {
+            foreach ($categoriesToDisable as $categoryToDisable) {
+                /** @var Category $category */
+                $category = $this->em
+                    ->getRepository('AppBundle:Category')
+                    ->findOneBy(array(
+                        'id' => $categoryToDisable
+                    ));
+                $category->setIsActive(false);
+                $this->em->persist($category);
+                $this->em->flush();
+            }
+        }
         $categories = $this->em
             ->getRepository('AppBundle:Category')
             ->findBy(array(
