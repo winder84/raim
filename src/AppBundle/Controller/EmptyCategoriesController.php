@@ -27,6 +27,7 @@ class EmptyCategoriesController extends CoreController
                 $this->em->persist($category);
                 $this->em->flush();
             }
+            return $this->redirect('/admin/emptyCategories');
         }
         $categories = $this->em
             ->getRepository('AppBundle:Category')
