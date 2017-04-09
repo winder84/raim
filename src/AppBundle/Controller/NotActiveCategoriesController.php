@@ -13,6 +13,22 @@ class NotActiveCategoriesController extends CoreController
     public function NotActiveCategoriesAction(Request $request)
     {
         $this->em = $this->getDoctrine()->getManager();
+        $enableCategories = $request->request->get('enableCategories');
+        $categoriesToEnable = $request->request->get('activateCategories');
+        if ($enableCategories && $categoriesToEnable) {
+            foreach ($categoriesToEnable as $categoryToEnableKey => $categoryToEnable) {
+                /** @var Category $category */
+                $category = $this->em
+                    ->getRepository('AppBundle:Category')
+                    ->findOneBy(array(
+                        'id' => $categoryToEnableKey
+                    ));
+                $category->setIsActive(true);
+                $this->em->persist($category);
+                $this->em->flush();
+            }
+            return $this->redirect('/admin/notActiveCategories');
+        }
         $categories = $this->em
             ->getRepository('AppBundle:Category')
             ->findBy(array(

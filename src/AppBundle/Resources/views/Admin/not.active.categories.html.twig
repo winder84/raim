@@ -4,8 +4,17 @@
 {% block breadcrumb %}{% endblock %}
 {% block content %}
     {{ include('AppBundle:Admin:menu.block.html.twig') }}
-    {% for resultCategory in resultCategories %}
-        <br /><br />
-        {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
-    {% endfor %}
+    <form name="enableCheckedCategories" method="post" action="/admin/notActiveCategories" style="margin: 10px;">
+        <div class="row-fluid">
+            <div class="span6">
+                <input type="hidden" name="enableCategories" value="1">
+                <input type="submit" class="btn btn-primary" value="Включить выбранные категории" />
+            </div>
+        </div>
+        {% for resultCategory in resultCategories %}
+            <br />
+            <input type="checkbox" name="activateCategories[{{ resultCategory.id }}]"/>
+            {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
+        {% endfor %}
+    </form>
 {% endblock %}
