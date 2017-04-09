@@ -1,25 +1,27 @@
 {% macro category_links(links) %}
     {% for link in links %}
-        {
-            selectable: false,
-        {% if link.externalId is defined %}
-            icon: 'glyphicon glyphicon-align-justify',
-            text: '(id: {{ link.id }}) {{ link.name }} | ' +
-            '<a target="_blank" href="/admin/app/externalcategory/{{ link.id }}/edit" style="color: orangered;">ред.</a> | ' +
-            '<a target="_blank" href="/admin/exCategoryProducts?exCategoryId={{ link.id }}" style="color: orangered;">товары</a>',
-            {#href: "/admin/exCategoryProducts?exCategoryId={{ link.id }}",#}
-            color: "darkred",
-        {% else %}
-            text: '{{ link.name }} | <a target="_blank"  href="/admin/app/category/{{ link.id }}/edit" style="color: orangered;">ред.</a>',
-            nodes: [
-                {% if link.children is defined %}
-                    {{ _self.category_links(link.children) }}
-                {% endif %}
-                {% if link.getexternalCategories() is defined %}
-                    {{ _self.category_links(link.externalCategories) }}
-                {% endif %}
-            ],
+        {% if link.isActive == 1 %}
+            {
+                selectable: false,
+            {% if link.externalId is defined %}
+                icon: 'glyphicon glyphicon-align-justify',
+                text: '(id: {{ link.id }}) {{ link.name }} | ' +
+                '<a target="_blank" href="/admin/app/externalcategory/{{ link.id }}/edit" style="color: orangered;">ред.</a> | ' +
+                '<a target="_blank" href="/admin/exCategoryProducts?exCategoryId={{ link.id }}" style="color: orangered;">товары</a>',
+                {#href: "/admin/exCategoryProducts?exCategoryId={{ link.id }}",#}
+                color: "darkred",
+            {% else %}
+                text: '{{ link.name }} | <a target="_blank"  href="/admin/app/category/{{ link.id }}/edit" style="color: orangered;">ред.</a>',
+                nodes: [
+                    {% if link.children is defined %}
+                        {{ _self.category_links(link.children) }}
+                    {% endif %}
+                    {% if link.getexternalCategories() is defined %}
+                        {{ _self.category_links(link.externalCategories) }}
+                    {% endif %}
+                ],
+            {% endif %}
+            },
         {% endif %}
-        },
     {% endfor %}
 {% endmacro %}
