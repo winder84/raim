@@ -14,7 +14,7 @@
 							<ul class="slides">
 								{% for productPicture in product.pictures %}
 									<li>
-										<a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
+										<a rel="nofollow" class="itemPictureHref" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
 											<img src="{{ productPicture|replace({'http:': "https:"}) }}" itemprop="image">
 										</a>
 									</li>
@@ -33,7 +33,7 @@
 					<a class="productLink" rel="nofollow" title="{{ product.name|raw }} {{ product.model|raw }}">Нет в наличии</a>
 				{% else %}
 					<noindex>
-						<a class="productLink" rel="nofollow" target="_blank" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
+						<a class="productLink itemPictureHref" rel="nofollow" target="_blank" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
 						 {{ product.model|raw }}">Купить в магазине {{ product.site }}</a>
 					</noindex>
 				{% endif %}

@@ -15,7 +15,7 @@
                 {#<div class="itemName">{{ product.name|raw }}</div>#}
                 <div class="itemPicture">
                     <noindex>
-                        <a rel="nofollow" href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}"
+                        <a rel="nofollow" class="itemPictureHref" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}"
                            alt="{{ product.name|raw }} {{ product.model|raw }}">
                             <img src="{% if product.pictures.0 is not defined %}{{ asset('bundles/app/images/nopic.jpg') }}{% else %}{{ product.pictures.0|replace({'http:': ""}) }}{% endif %}">
                         </a>
@@ -58,3 +58,13 @@
         </div>
     </noindex>
 {% endif %}
+<script>
+    $('.itemPictureHref').on('mouseover', function () {
+        console.log(1);
+        $(this).prop('href', $(this).data('href'));
+    });
+    $('.itemPictureHref').on('mouseleave', function () {
+        console.log(2);
+        $(this).prop('href', '');
+    });
+</script>
