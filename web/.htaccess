@@ -12,6 +12,7 @@ SetEnvIfNoCase Remote_Addr "^14\.221\.174\.253" bad_bot
 SetEnvIfNoCase Remote_Addr "^120\.85\.249\.227" bad_bot
 SetEnvIfNoCase Remote_Addr "^119\.61\.66\.10" bad_bot
 SetEnvIfNoCase Remote_Addr "^188\.120\.254\.133" bad_bot
+SetEnvIfNoCase Remote_Addr "^122\.114\.95\.178" bad_bot
 
 <Limit GET POST HEAD>
     Order Allow,Deny
