@@ -14,7 +14,7 @@
     <br />
     <br />
     {% import "AppBundle:Admin:category-macros.html.twig" as macros %}
-    <div id="tree"></div>
+    <div id="tree" class="categoriesTree"></div>
     <script>
         function getTree() {
           data = [
@@ -28,4 +28,14 @@
             data: getTree()
         });
     </script>
+    <style>
+        .content-wrapper {
+            font-size: 12px !important;
+            line-height: 12px;
+            vertical-align: middle;
+        }
+        .list-group-item {
+            padding: 5px 10px;
+        }
+    </style>
 {% endblock %}

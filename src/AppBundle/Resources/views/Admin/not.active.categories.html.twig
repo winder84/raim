@@ -11,10 +11,19 @@
                 <input type="submit" class="btn btn-primary" value="Включить выбранные категории" />
             </div>
         </div>
-        {% for resultCategory in resultCategories %}
-            <br />
-            <input type="checkbox" name="activateCategories[{{ resultCategory.id }}]"/>
-            {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
-        {% endfor %}
+        <div class="notActiveCategories">
+            {% for resultCategory in resultCategories %}
+                <br />
+                <input type="checkbox" name="activateCategories[{{ resultCategory.id }}]"/>
+                {{ resultCategory.name }} | <a target="_blank"  href="/admin/app/category/{{ resultCategory.id }}/edit" style="color: orangered;">ред.</a>
+            {% endfor %}
+        </div>
     </form>
+    <style>
+        .notActiveCategories {
+            font-size: 14px;
+            line-height: 14px;
+            vertical-align: middle;
+        }
+    </style>
 {% endblock %}
