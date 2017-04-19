@@ -60,11 +60,9 @@
 {% endif %}
 <script>
     $('.itemPictureHref').on('mouseover', function () {
-        console.log(1);
         $(this).prop('href', $(this).data('href'));
     });
     $('.itemPictureHref').on('mouseleave', function () {
-        console.log(2);
         $(this).prop('href', '');
     });
 </script>

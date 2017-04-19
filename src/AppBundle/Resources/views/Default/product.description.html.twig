@@ -14,7 +14,7 @@
 							<ul class="slides">
 								{% for productPicture in product.pictures %}
 									<li>
-										<a rel="nofollow" class="itemPictureHref" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина">
+										<a rel="nofollow" class="itemPictureHref" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }} - {{ product.model|raw }} - сайт магазина {{ product.site }}">
 											<img src="{{ productPicture|replace({'http:': "https:"}) }}" itemprop="image">
 										</a>
 									</li>
@@ -29,14 +29,10 @@
 			<div class="shopUniBlock" style="margin: 0 0 0 50px; width: 620px;" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 				<h2 class="itemName">Цена: <span itemprop="price">{{ product.price|raw }}</span> руб.</h2>
 				<span style="display: none;" itemprop="priceCurrency">RUB</span>
-				{% if product.isDelete %}
-					<a class="productLink" rel="nofollow" title="{{ product.name|raw }} {{ product.model|raw }}">Нет в наличии</a>
-				{% else %}
-					<noindex>
-						<a class="productLink itemPictureHref" rel="nofollow" target="_blank" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
-						 {{ product.model|raw }}">Купить в магазине {{ product.site }}</a>
-					</noindex>
-				{% endif %}
+				<noindex>
+					<a class="productLink itemPictureHref" rel="nofollow" target="_blank" data-href="/product/buy/{{ product.alias|raw }}" title="{{ product.name|raw }}
+						 {{ product.model|raw }}">{% if product.isDelete %}Уточнить наличие в магазине{% else %}Купить в магазине{% endif %} {{ product.site }}</a>
+				</noindex>
 			</div>
 			{% if product.description|raw is not empty %}
 				<div class="shopDescBlock">
