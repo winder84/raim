@@ -93,26 +93,26 @@ class clearSiteCommand extends ContainerAwareCommand
         $this->em->flush();
         $this->em->clear();
 
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete('AppBundle:ExternalCategory', 'ExCategory')
-            ->where('ExCategory.site = :site')
-            ->andWhere('round(ExCategory.version, 2) != :newVersion')
-            ->setParameter('site', $site)
-            ->setParameter('newVersion', $siteVersion);
-        $qb->getQuery()->execute();
-        $this->outputWriteLn('ExCategories deleted');
-        $this->em->flush();
-        $this->em->clear();
+//        $qb = $this->em->createQueryBuilder();
+//        $qb->delete('AppBundle:ExternalCategory', 'ExCategory')
+//            ->where('ExCategory.site = :site')
+//            ->andWhere('round(ExCategory.version, 2) != :newVersion')
+//            ->setParameter('site', $site)
+//            ->setParameter('newVersion', $siteVersion);
+//        $qb->getQuery()->execute();
+//        $this->outputWriteLn('ExCategories deleted');
+//        $this->em->flush();
+//        $this->em->clear();
 
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete('AppBundle:Vendor', 'Vendor')
-            ->where('Vendor.site = :site')
-            ->andWhere('round(Vendor.version, 2) != :newVersion')
-            ->setParameter('site', $site)
-            ->setParameter('newVersion', $siteVersion);
-        $qb->getQuery()->execute();
-        $this->outputWriteLn('Vendors deleted');
-        $this->em->flush();
-        $this->em->clear();
+//        $qb = $this->em->createQueryBuilder();
+//        $qb->delete('AppBundle:Vendor', 'Vendor')
+//            ->where('Vendor.site = :site')
+//            ->andWhere('round(Vendor.version, 2) != :newVersion')
+//            ->setParameter('site', $site)
+//            ->setParameter('newVersion', $siteVersion);
+//        $qb->getQuery()->execute();
+//        $this->outputWriteLn('Vendors deleted');
+//        $this->em->flush();
+//        $this->em->clear();
     }
 }
