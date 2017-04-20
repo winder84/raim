@@ -149,7 +149,7 @@ class chpuGeneratorCommand extends ContainerAwareCommand
                     $productPropertyValue->setPropValue(mb_substr($name . ' ' . $productPropertyValue->getValue(), 0, 250,'UTF-8'));
                     $this->em->persist($productPropertyValue);
                 }
-                if ($i % 5000 == 0) {
+                if ($i % 10000 == 0) {
                     $this->outputWriteLn('productPropertyValues - ' . $i);
                     $this->em->flush();
                 }
