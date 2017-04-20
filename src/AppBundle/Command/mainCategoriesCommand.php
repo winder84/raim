@@ -62,8 +62,11 @@ class mainCategoriesCommand extends ContainerAwareCommand
 
         /** @var Product[] $products */
         foreach ($products as $product) {
-            $productCategoryId = $product->getCategory()->getId();
-            $productCategories[$productCategoryId] = $productCategoryId;
+            $productCategory = $product->getCategory();
+            if ($productCategory) {
+                $productCategoryId = $product->getCategory()->getId();
+                $productCategories[$productCategoryId] = $productCategoryId;
+            }
         }
         $this->outputWriteLn('Categories - ' . count($productCategories));
 
